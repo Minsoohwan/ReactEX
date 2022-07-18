@@ -1,0 +1,50 @@
+.icon {
+    position: absolute;
+    top: 2px;
+    left: 0px;
+    cursor: pointer;
+}
+
+.todoIcon {
+    cursor: pointer;
+}
+
+.todoIcon:hover {
+    color: rgb(94, 94, 94);
+}
+.camera {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    cursor: pointer;
+    z-index: 100;
+}
+.camera:hover {
+    color: rgb(104, 104, 104);
+}
+.edit {
+    position: absolute;
+    bottom: 0;
+    left: -10px;
+    cursor: pointer;
+    color: green;
+    z-index: 100;
+}
+.addFriends {
+    position: absolute;
+    top: 100px;
+    right: 10px;
+    cursor: pointer;
+}
+.addFriends:hover {
+    color: gray;
+}
+.addFriends:active {
+    color: black;
+}
+.exit {
+    position: absolute;
+    right: 10px;
+    top: 55px;
+    z-index: 999;
+}
