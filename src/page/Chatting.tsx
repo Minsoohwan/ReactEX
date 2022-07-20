@@ -322,7 +322,7 @@ export const Chatting = () => {
                 size="25"
                 onClick={() => {
                     wsDisConnectUnsubscribe();
-                    queryClient.invalidateQueries('chatList');
+
                     nav(-1);
                 }}
             />
