@@ -84,6 +84,7 @@ const AskModal = (props: props) => {
         {
             onSuccess: (res) => {
                 queryClient.invalidateQueries('planData');
+                queryClient.invalidateQueries('userData');
                 console.log(res);
             },
             onError: (err: AxiosError) => {

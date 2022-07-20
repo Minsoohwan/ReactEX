@@ -8,5 +8,6 @@ export * from './CoummunityDetail';
 export * from './Chat';
 export * from './Chatting';
 export * from './AddPost';
+export * from './EditPost';
 export * from './Friends';
 export * from './ChangePassWord';

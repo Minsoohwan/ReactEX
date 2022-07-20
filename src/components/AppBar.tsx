@@ -5,8 +5,8 @@ import { AiOutlineSchedule } from 'react-icons/ai';
 import { BsPeople } from 'react-icons/bs';
 import { AiOutlinePlusCircle } from 'react-icons/ai';
 
-import { useRecoilState } from 'recoil';
-import { calenderState, dateState } from '../recoil/store';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { calenderState, dateState, userModal } from '../recoil/store';
 import { useNavigate } from 'react-router-dom';
 import { HiOutlineChat } from 'react-icons/hi';
 
@@ -39,11 +39,12 @@ interface props {
 }
 const AppBar = (props: props) => {
     const { close } = props;
+    const setShowUserModal = useSetRecoilState(userModal);
     const [, setDate] = useRecoilState<string[]>(dateState);
     const [, setShowReq] = useRecoilState<boolean>(calenderState);
     const nav = useNavigate();
     return (
-        <Bottom>
+        <Bottom onClick={() => setShowUserModal(false)}>
             <Div onClick={() => nav('/')}>
                 <AiOutlineHome size="30" cursor={'pointer'} />홈
             </Div>

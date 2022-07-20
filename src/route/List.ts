@@ -13,6 +13,7 @@ import {
     AddPost,
     Friends,
     ChangePassWord,
+    EditPost,
 } from './../page';
 interface Route {
     id: string;
@@ -70,6 +71,11 @@ export const List: Route[] = [
         id: 'AddPost',
         path: '/post',
         page: AddPost,
+    },
+    {
+        id: 'EditPost',
+        path: '/edit/:id',
+        page: EditPost,
     },
     {
         id: 'Friends',

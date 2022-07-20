@@ -17,8 +17,10 @@ import UserModal from '../components/UserMenu';
 import axios, { AxiosError } from 'axios';
 import setupInterceptorsTo from '../Api/Interceptors';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { ContentProfileImg, DateDiv } from './Community';
+import { ContentProfileImg, createDateTime, DateDiv } from './Community';
 import { callUpApi } from '../Api/callAPi';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { boardStore, userInfo } from '../recoil/store';
 
 const WhiteBoard = styled.div`
     position: relative;
@@ -75,7 +77,8 @@ const MenuContent = styled.div`
     border-bottom: ${(props: props) => props.borderBottom};
     align-items: center;
     width: 100%;
-    height: 40px; ;
+    height: 40px;
+    cursor: pointer;
 `;
 
 const ContentOutLine = styled.div`
@@ -178,7 +181,7 @@ const JoinButton = styled.button`
     }
 `;
 
-const TodoInform = styled.div`
+export const TodoInform = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -207,6 +210,8 @@ export const CommunityDetail = () => {
     const [showReq, setShowReq] = useState<boolean>(false);
     const [menu, setMenu] = useState<boolean>(false);
     const [join, setjoin] = useState<boolean>(false);
+    const setBoardData = useSetRecoilState(boardStore);
+    const userdata = useRecoilValue(userInfo);
     const param = useParams();
     const boardId = param.id;
     const queryClient = useQueryClient();
@@ -214,11 +219,19 @@ export const CommunityDetail = () => {
     function closeReq() {
         setShowReq(!showReq);
     }
+    const chatQuery: any = useQuery('chatList', callUpApi.getChatListApi, {});
+    function checkChatRoom(data: string) {
+        for (let i = 0; i < chatQuery.data.data.length; i++) {
+            if (chatQuery.data.data[i].roomId === data) {
+                return true;
+            }
+            return false;
+        }
+    }
     const baseApi = axios.create({
         baseURL: 'https://todowith.shop',
         timeout: 1000,
     });
-    const chatQuery: any = useQuery('chatList', callUpApi.getChatListApi, {});
 
     const callApi = setupInterceptorsTo(baseApi);
 
@@ -226,7 +239,9 @@ export const CommunityDetail = () => {
         const detail = await callApi.get(`/board/${boardId}`);
         return detail;
     };
-    const boardDetail = useQuery('boardDetail', getDetail);
+    const boardDetail = useQuery('boardDetail', getDetail, {
+        onSuccess: (res) => setBoardData(res.data),
+    });
 
     const joinTodo = () => {
         if (boardId) {
@@ -235,6 +250,7 @@ export const CommunityDetail = () => {
     };
     const letJoin = useMutation((id: string) => callUpApi.joinTodoApi(id), {
         onSuccess: (res) => {
+            alert(res.data);
             queryClient.invalidateQueries('boardDetail');
         },
         onError: (err: AxiosError<{ msg: string }>) => {
@@ -265,9 +281,40 @@ export const CommunityDetail = () => {
         (id: string) => callUpApi.cancleTodoApi(id),
         {
             onSuccess: (res) => {
-                console.log(res);
+                alert(res.data);
                 setjoin(!join);
                 queryClient.invalidateQueries('boardDetail');
+            },
+            onError: (err: AxiosError<{ msg: string }>) => {
+                alert(err.response?.data.msg);
+            },
+        },
+    );
+    const deleteChatRoom = (data: { roomId: string }) => {
+        deleteChat.mutate(data);
+    };
+
+    const deleteChat = useMutation(
+        (data: { roomId: string }) => callUpApi.deleteChatApi(data),
+        {
+            onSuccess: (res) => {
+                console.log(res);
+            },
+        },
+    );
+    const deleteBoardPost = () => {
+        if (boardId) {
+            deleteBoard.mutate(boardId);
+        }
+    };
+
+    const deleteBoard = useMutation(
+        (id: string) => callUpApi.deleteBoardApi(id),
+        {
+            onSuccess: (res) => {
+                alert(res.data);
+                nav(-1);
+                queryClient.invalidateQueries('boardData');
             },
             onError: (err: AxiosError<{ msg: string }>) => {
                 alert(err.response?.data.msg);
@@ -297,25 +344,40 @@ export const CommunityDetail = () => {
                                     style={{
                                         margin: 'auto 10px auto auto',
                                         display: 'flex',
-                                        flexDirection: 'column',
+                                        flexDirection: 'row',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                     }}
                                 >
+                                    <DateDiv>
+                                        {createDateTime(
+                                            boardDetail.data.data
+                                                .boardCreatedDate,
+                                        )[0] +
+                                            '\n' +
+                                            createDateTime(
+                                                boardDetail.data.data
+                                                    .boardCreatedDate,
+                                            )[1]}
+                                    </DateDiv>
                                     <ContentType>참여형</ContentType>
-                                    <DateDiv>2022.07.16</DateDiv>
                                 </div>
                             ) : (
                                 <div
                                     style={{
                                         margin: 'auto 10px auto auto',
                                         display: 'flex',
-                                        flexDirection: 'column',
+                                        flexDirection: 'row',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                     }}
                                 >
-                                    <DateDiv>2022.07.16</DateDiv>
+                                    <DateDiv>
+                                        {createDateTime(
+                                            boardDetail.data.data
+                                                .boardCreatedDate,
+                                        )}
+                                    </DateDiv>
                                 </div>
                             )}
 
@@ -324,7 +386,10 @@ export const CommunityDetail = () => {
                                 cursor={'pointer'}
                                 onClick={() => setMenu(!menu)}
                             />
-                            {menu && (
+                            {menu &&
+                            userdata.nick ===
+                                boardDetail.data.data.authorNick &&
+                            boardDetail.data.data.category !== 'CHALLENGE' ? (
                                 <CommunityMenu>
                                     <MenuContent borderTop="" borderBottom="">
                                         링크
@@ -333,15 +398,38 @@ export const CommunityDetail = () => {
                                     <MenuContent
                                         borderTop="1px solid #58585857"
                                         borderBottom="1px solid #58585857"
+                                        onClick={() =>
+                                            nav(
+                                                `/edit/${boardDetail.data.data.boardId}`,
+                                            )
+                                        }
                                     >
                                         수정
                                         <BsPencilFill />
                                     </MenuContent>
-                                    <MenuContent borderTop="" borderBottom="">
+                                    <MenuContent
+                                        borderTop=""
+                                        borderBottom=""
+                                        onClick={() => {
+                                            deleteBoardPost();
+                                        }}
+                                    >
                                         삭제
                                         <BsTrashFill />
                                     </MenuContent>
                                 </CommunityMenu>
+                            ) : (
+                                menu && (
+                                    <CommunityMenu>
+                                        <MenuContent
+                                            borderTop=""
+                                            borderBottom=""
+                                        >
+                                            링크
+                                            <BsShareFill />
+                                        </MenuContent>
+                                    </CommunityMenu>
+                                )
                             )}
                         </ContentProfile>
                         <ContentImg src={boardDetail.data.data.imageUrl} />
@@ -389,9 +477,13 @@ export const CommunityDetail = () => {
                                     : '#272626'
                             }
                             onClick={
-                                join
+                                boardDetail.data.data.participating
                                     ? () => {
                                           cancleTodo();
+                                          deleteChatRoom({
+                                              roomId: boardDetail.data.data
+                                                  .chatRoomId,
+                                          });
                                           queryClient.invalidateQueries(
                                               'boardDetail',
                                           );
@@ -416,14 +508,7 @@ export const CommunityDetail = () => {
                             color="#272626"
                             onClick={
                                 chatQuery.status === 'success' &&
-                                chatQuery.data.data.map((v: any, i: number) => {
-                                    if (
-                                        v.rooomId ===
-                                        boardDetail.data.data.chatRoomId
-                                    ) {
-                                        return true;
-                                    } else return false;
-                                })
+                                checkChatRoom(boardDetail.data.data.chatRoomId)
                                     ? () => {
                                           alert('이미 침여중인 채팅입니다.');
                                       }

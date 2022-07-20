@@ -17,7 +17,8 @@ import axios from 'axios';
 import { useInfiniteQuery, useQueryClient } from 'react-query';
 import { useInView } from 'react-intersection-observer';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { searchingStore } from '../recoil/store';
+import { searchingStore, viewData } from '../recoil/store';
+import { stringify } from 'querystring';
 
 const WhiteBoard = styled.div`
     position: relative;
@@ -243,9 +244,34 @@ const Count = styled.div`
     font-size: 20px;
     font-weight: bold;
 `;
+export const createDateTime = (date: string) => {
+    let dateNTime = date.split('T');
+    let oldDate = dateNTime[0].split('-');
+    let oldTime = dateNTime[1].split(':');
+    const newDate = oldDate[0] + '.' + oldDate[1] + '.' + oldDate[2];
+    if (oldTime[0] === '00') {
+        const newTime = '오전 12시' + oldTime[1] + '분';
+        return [newDate, newTime];
+    } else if (oldTime[0] === '12') {
+        const newTime = '오후 12시' + oldTime[1] + '분';
+        return [newDate, newTime];
+    } else if (oldTime[0] > '12') {
+        const newTime =
+            '오후 ' +
+            (parseInt(oldTime[0]) - 12) +
+            '시' +
+            ' ' +
+            oldTime[1] +
+            '분';
+        return [newDate, newTime];
+    } else {
+        const newTime = '오후 ' + oldTime[0] + '시' + ' ' + oldTime[1] + '분';
+        return [newDate, newTime];
+    }
+};
 export const Community = () => {
     const [showReq, setShowReq] = useState<boolean>(false);
-    const [select, setSelect] = useState<string>('');
+    const [select, setSelect] = useRecoilState(viewData);
     const [searchValue, setSearchValue] = useState<{
         value: string;
         state: boolean;
@@ -304,7 +330,6 @@ export const Community = () => {
                 // refetchInterval: 1,
             },
         );
-
     useEffect(() => {
         // 맨 마지막 요소를 보고있고 더이상 페이지가 존재하면
         // 다음 페이지 데이터를 가져옴
@@ -433,7 +458,11 @@ export const Community = () => {
                                                           참여형
                                                       </ContentType>
                                                       <DateDiv>
-                                                          2022.07.16
+                                                          {
+                                                              createDateTime(
+                                                                  v.boardCreatedDate,
+                                                              )[0]
+                                                          }
                                                       </DateDiv>
                                                   </div>
                                               ) : (
@@ -449,7 +478,11 @@ export const Community = () => {
                                                       }}
                                                   >
                                                       <DateDiv>
-                                                          2022.07.16
+                                                          {
+                                                              createDateTime(
+                                                                  v.boardCreatedDate,
+                                                              )[0]
+                                                          }
                                                       </DateDiv>
                                                   </div>
                                               )}
@@ -457,10 +490,12 @@ export const Community = () => {
                                           <ContentImg src={v.imageUrl} />
                                           <ContentTitle>{v.title}</ContentTitle>
                                           <Content>{v.boardContent}</Content>
-                                          <Count>
-                                              <MdEmojiPeople size={20} />
-                                              {v.participatingCount}
-                                          </Count>
+                                          {v.category === 'CHALLENGE' && (
+                                              <Count>
+                                                  <MdEmojiPeople size={20} />
+                                                  {v.participatingCount}
+                                              </Count>
+                                          )}
                                       </ContentDiv>
                                   );
                               } else {
@@ -498,7 +533,11 @@ export const Community = () => {
                                                           참여형
                                                       </ContentType>
                                                       <DateDiv>
-                                                          2022.07.16
+                                                          {
+                                                              createDateTime(
+                                                                  v.boardCreatedDate,
+                                                              )[0]
+                                                          }
                                                       </DateDiv>
                                                   </div>
                                               ) : (
@@ -514,7 +553,11 @@ export const Community = () => {
                                                       }}
                                                   >
                                                       <DateDiv>
-                                                          2022.07.16
+                                                          {
+                                                              createDateTime(
+                                                                  v.boardCreatedDate,
+                                                              )[0]
+                                                          }
                                                       </DateDiv>
                                                   </div>
                                               )}
@@ -522,10 +565,12 @@ export const Community = () => {
                                           <ContentImg src={v.imageUrl} />
                                           <ContentTitle>{v.title}</ContentTitle>
                                           <Content>{v.boardContent}</Content>
-                                          <Count>
-                                              <MdEmojiPeople size={20} />
-                                              {v.participatingCount}
-                                          </Count>
+                                          {v.category === 'CHALLENGE' && (
+                                              <Count>
+                                                  <MdEmojiPeople size={20} />
+                                                  {v.participatingCount}
+                                              </Count>
+                                          )}
                                       </ContentDiv>
                                   );
                               }

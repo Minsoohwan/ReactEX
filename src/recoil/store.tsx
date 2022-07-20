@@ -75,6 +75,40 @@ export const searchingStore = atom({
     key: 'searchingStore',
     default: 'title' as string,
 });
+export const shareData = atom({
+    key: 'shareData',
+    default: null as {
+        category: string;
+        content: string;
+        todoDateList: string[];
+    } | null,
+});
+export const boardStore = atom({
+    key: 'boardStore',
+    default: {} as {
+        authorEmail: string;
+        authorNick: string;
+        authorProfileImageUrl: string;
+        boardContent: string;
+        boardCreatedDate: string;
+        boardId: number;
+        category: string;
+        chatRoomId: string;
+        imageUrl: string;
+        participating: boolean;
+        participatingCount: number;
+        title: string;
+        todo: {
+            category: string;
+            todoContent: string;
+            todoDateList: string[];
+        };
+    },
+});
+export const viewData = atom({
+    key: 'viewData',
+    default: '' as string,
+});
 export const accessTokenState = atom({
     key: 'access',
     default: '',

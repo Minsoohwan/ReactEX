@@ -4,8 +4,8 @@ import { AiOutlineCloseCircle } from 'react-icons/ai';
 import { BsCalendarDate } from 'react-icons/bs';
 import '../css/modal.css';
 import Calender from './Calender';
-import { useRecoilState } from 'recoil';
-import { calenderState, dateState } from '../recoil/store';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { calenderState, dateState, shareData } from '../recoil/store';
 import { useMutation, useQueryClient } from 'react-query';
 import { callUpApi, editPlan, plan } from '../Api/callAPi';
 import { AxiosError } from 'axios';
@@ -143,6 +143,8 @@ const AddListModal = (props: props) => {
     const [showReq, setShowReq] = useRecoilState<boolean>(calenderState);
     const [content, setContent] = useState<any>('');
     const [categori, setCategori] = useState<string>('');
+    const [date, setDate] = useRecoilState<string[]>(dateState);
+    const setShareDataSet = useSetRecoilState(shareData);
     function closeReq() {
         setShowReq(!showReq);
     }
@@ -150,7 +152,7 @@ const AddListModal = (props: props) => {
         setContent(e.target.value);
     };
     const queryClient = useQueryClient();
-    const [date, setDate] = useRecoilState<string[]>(dateState);
+
     const planData = {
         category: categori,
         content: content,
@@ -288,6 +290,7 @@ const AddListModal = (props: props) => {
                         >
                             공부
                         </CatagoriButton>
+
                         <CatagoriButton
                             back={'/img/일상.jpg'}
                             onClick={() => setCategori('PROMISE')}
@@ -303,12 +306,17 @@ const AddListModal = (props: props) => {
                     </CatagoriBox>
                     <SelectButton
                         onClick={
-                            type !== 'Edit'
+                            type === 'add'
                                 ? () => {
                                       addPlanList();
                                   }
-                                : () => {
+                                : type === 'Edit'
+                                ? () => {
                                       editPlanList();
+                                  }
+                                : () => {
+                                      setShareDataSet(planData);
+                                      close();
                                   }
                         }
                     >

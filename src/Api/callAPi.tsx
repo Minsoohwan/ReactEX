@@ -8,6 +8,36 @@ const baseApi = axios.create({
 
 const callApi = setupInterceptorsTo(baseApi);
 
+export interface board {
+    board: {
+        category: string;
+        content: string;
+        imageUrl: string;
+        title: string;
+    };
+    todo?: {
+        category?: string;
+        content?: string;
+        todoDateList?: string[];
+    };
+}
+export interface editboard {
+    data: {
+        board: {
+            category: string;
+            content: string;
+            imageUrl: string;
+            title: string;
+        };
+        todo?: {
+            category?: string;
+            content?: string;
+            todoDateList?: string[];
+        };
+    };
+    id: string;
+}
+
 interface data {
     email?: string;
     nick?: string;
@@ -157,7 +187,22 @@ const cancleTodoApi = async (id: string) => {
     const jta = await callApi.put(`board/${id}/challenge`);
     return jta;
 };
-
+const saveImageApi = async (data: FormData) => {
+    const sip = await callApi.post('/board/image', data);
+    return sip;
+};
+const addBoardApi = async (data: board) => {
+    const abp = await callApi.post('/board', data);
+    return abp;
+};
+const deleteBoardApi = async (id: string) => {
+    const dba = await callApi.delete(`/board/${id}`);
+    return dba;
+};
+const editBoardApi = async (data: editboard) => {
+    const ebp = await callApi.put(`/board/${data.id}`, data.data);
+    return ebp;
+};
 export const callUpApi = {
     getInfoApi: () => getInfoApi(),
     getNewTokenApi: () => getNewTokenApi(),
@@ -189,4 +234,8 @@ export const callUpApi = {
     cancleTodoApi: (id: string) => cancleTodoApi(id),
     enterPublicApi: (data: { roomId: string }) => enterPublicApi(data),
     deleteChatApi: (data: { roomId: string }) => deleteChatApi(data),
+    saveImageApi: (data: FormData) => saveImageApi(data),
+    addBoardApi: (data: board) => addBoardApi(data),
+    deleteBoardApi: (id: string) => deleteBoardApi(id),
+    editBoardApi: (data: editboard) => editBoardApi(data),
 };

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useRef, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import AddListModal from '../components/AddListModal';
 import AppBack from '../components/AppBack';
@@ -16,11 +16,12 @@ import { AiFillCamera } from 'react-icons/ai';
 import { BsFillTrashFill } from 'react-icons/bs';
 import UserModal from '../components/UserMenu';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { shareData, userInfo } from '../recoil/store';
+import { boardStore, shareData, userInfo } from '../recoil/store';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { board, callUpApi } from '../Api/callAPi';
+import { callUpApi, editboard } from '../Api/callAPi';
 import { TodoInform } from './CoummunityDetail';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+
 type props = {
     img?: string;
     border?: string;
@@ -194,19 +195,23 @@ const PostButton = styled.button`
         background-color: #272626;
     }
 `;
-export const AddPost = () => {
+export const EditPost = () => {
+    const boardData = useRecoilValue(boardStore);
+    console.log(boardData);
     const [showReq, setShowReq] = useState<boolean>(false);
     const [showShare, setShowShare] = useState<boolean>(false);
-    const [viewImg, setViewImg] = useState<string>('');
+    const [viewImg, setViewImg] = useState<string>(boardData.imageUrl);
     const [display, setDisplay] = useState<boolean>(true);
-    const [type, setType] = useState<string>('CHALLENGE');
+    const [type, setType] = useState<string>(boardData.category);
     const [text, setText] = useState<{ title: string; content: string }>({
-        title: '',
-        content: '',
+        title: boardData.title,
+        content: boardData.boardContent,
     });
     const [userdata, setUserdata] = useRecoilState(userInfo);
     const [shareDataSet, setShareDataSet] = useRecoilState(shareData);
     const inputImg: any = useRef();
+    const param = useParams();
+    const boardId = param.id;
     const nav = useNavigate();
     const userData: any = useQuery('userData', callUpApi.getInfoApi, {
         onSuccess: (res: any) => {
@@ -263,20 +268,34 @@ export const AddPost = () => {
         },
     };
     const queryClient = useQueryClient();
-    const addPostFunc = () => {
-        addPost.mutate(postData);
+    const editPostFunc = () => {
+        if (boardId) {
+            editPost.mutate({ data: postData, id: boardId });
+        }
     };
-    const addPost = useMutation((data: board) => callUpApi.addBoardApi(data), {
-        onSuccess: (res) => {
-            alert(res.data);
-            queryClient.invalidateQueries('boardData');
-            nav('/community');
+    const editPost = useMutation(
+        (data: editboard) => callUpApi.editBoardApi(data),
+        {
+            onSuccess: (res) => {
+                queryClient.invalidateQueries('boardData');
+                alert(res.data);
+                nav('/community');
+            },
         },
-    });
+    );
+    useEffect(() => {
+        if (boardData.todo.category !== null) {
+            setShareDataSet({
+                category: boardData.todo.category,
+                content: boardData.todo.todoContent,
+                todoDateList: boardData.todo.todoDateList,
+            });
+        }
+    }, [boardData]);
     return (
         <WhiteBoard>
             <TopBar />
-            <Title title="Write" />
+            <Title title="Edit" />
             <TopBack />
             <UserModal />
             <PostOutLine>
@@ -379,7 +398,7 @@ export const AddPost = () => {
                 )}
                 <PostButton
                     onClick={() => {
-                        addPostFunc();
+                        editPostFunc();
                     }}
                 >
                     작성하기
