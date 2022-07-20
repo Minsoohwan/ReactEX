@@ -1,10 +1,12 @@
 import React, { PropsWithChildren } from 'react';
 import '../css/dropDown.css';
 import styled from 'styled-components';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { callUpApi } from '../Api/callAPi';
 import axios from 'axios';
 import setupInterceptorsTo from '../Api/Interceptors';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { userInfo } from '../recoil/store';
 
 const DropDownArticle = styled.article`
     position: absolute;
@@ -49,12 +51,16 @@ const DropDownLi = styled.li`
 const Dropdown = () => {
     const [dropdownVisibility, setDropdownVisibility] = React.useState(false);
     const [visibilityAnimation, setVisibilityAnimation] = React.useState(false);
-    const [scope, setScope] = React.useState<string>('전체공개');
-    const [scopeData, setScopeData] = React.useState<string>('ALL');
+    const [userdata, setUserData] = useRecoilState(userInfo);
     const scopePlanList = (data: { publicScope: string }) => {
         scopePlan.mutate(data);
     };
 
+    const userData: any = useQuery('userData', callUpApi.getInfoApi, {
+        onSuccess: (res: any) => {
+            setUserData(res.data);
+        },
+    });
     const scopePlan = useMutation(
         (data: { publicScope: string }) => callUpApi.scopePlanApi(data),
         {
@@ -63,7 +69,7 @@ const Dropdown = () => {
             },
         },
     );
-
+    const queryClient = useQueryClient();
     React.useEffect(() => {
         if (dropdownVisibility) {
             setVisibilityAnimation(true);
@@ -73,15 +79,17 @@ const Dropdown = () => {
             }, 400);
         }
     }, [dropdownVisibility]);
-    React.useEffect(() => {
-        scopePlanList({ publicScope: scopeData });
-    }, [scopeData]);
+
     return (
         <DropDownArticle>
             <DropDownButton
                 onClick={() => setDropdownVisibility(!dropdownVisibility)}
             >
-                {scope}
+                {userdata.publicScope === 'ALL'
+                    ? '전체공개'
+                    : userdata.publicScope === 'FRIEND'
+                    ? '친구공개'
+                    : '비공개'}
             </DropDownButton>
             <div
                 className={
@@ -94,8 +102,8 @@ const Dropdown = () => {
                     <DropDownUl>
                         <DropDownLi
                             onClick={() => {
-                                setScope('전체공개');
-                                setScopeData('ALL');
+                                scopePlanList({ publicScope: 'ALL' });
+                                queryClient.invalidateQueries('userData');
                                 setDropdownVisibility(!dropdownVisibility);
                             }}
                         >
@@ -104,8 +112,8 @@ const Dropdown = () => {
 
                         <DropDownLi
                             onClick={() => {
-                                setScope('친구공개');
-                                setScopeData('FRIEND');
+                                scopePlanList({ publicScope: 'FRIEND' });
+                                queryClient.invalidateQueries('userData');
                                 setDropdownVisibility(!dropdownVisibility);
                             }}
                         >
@@ -114,8 +122,8 @@ const Dropdown = () => {
 
                         <DropDownLi
                             onClick={() => {
-                                setScope('비공개');
-                                setScopeData('NONE');
+                                scopePlanList({ publicScope: 'NONE' });
+                                queryClient.invalidateQueries('userData');
                                 setDropdownVisibility(!dropdownVisibility);
                             }}
                         >
@@ -126,7 +134,6 @@ const Dropdown = () => {
                     <DropDownUl>
                         <DropDownLi
                             onClick={() => {
-                                setScope('전체공개');
                                 setDropdownVisibility(!dropdownVisibility);
                             }}
                         >
@@ -135,7 +142,6 @@ const Dropdown = () => {
 
                         <DropDownLi
                             onClick={() => {
-                                setScope('친구공개');
                                 setDropdownVisibility(!dropdownVisibility);
                             }}
                         >
@@ -144,7 +150,6 @@ const Dropdown = () => {
 
                         <DropDownLi
                             onClick={() => {
-                                setScope('비공개');
                                 setDropdownVisibility(!dropdownVisibility);
                             }}
                         >

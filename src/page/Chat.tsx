@@ -126,6 +126,17 @@ interface list {
     nick: string;
     profileImageUrl?: string;
     id?: number;
+    participantList: [
+        {
+            user: {
+                id: number;
+                userId: string;
+                nick: string;
+                email: string;
+                profileImageUrl: string;
+            };
+        },
+    ];
 }
 interface friends {
     id: string;
@@ -149,11 +160,10 @@ export const Chat = () => {
     const nav = useNavigate();
     const userData: any = useQuery('userData', callUpApi.getInfoApi, {
         onSuccess: (res: any) => {
+            queryClient.invalidateQueries('chatList');
             setUserdata(res.data);
         },
-        onError: (res) => {
-            console.log(res);
-        },
+        onError: (res) => {},
     });
     const chatQuery: any = useQuery('chatList', callUpApi.getChatListApi, {
         onSuccess: (res: any) => {
@@ -182,6 +192,7 @@ export const Chat = () => {
             },
         },
     );
+    console.log(chatList);
     return (
         <WhiteBoard>
             <TopBar />
@@ -244,15 +255,21 @@ export const Chat = () => {
                 <ListDiv>
                     {listName === 'Chat List' ? (
                         <>
-                            {chatList.map((list: list) => (
+                            {chatList.map((list: list, i: number) => (
                                 <ChatList
-                                    key={list.roomId}
+                                    key={i}
                                     onClick={() => nav(`/chat/${list.roomId}`)}
                                 >
-                                    <ContentProfileImg />
-                                    <ContentProfileName>
-                                        캐릭터호랑이
-                                    </ContentProfileName>
+                                    {list.participantList[0] ? (
+                                        <ContentProfileImg
+                                            url={
+                                                list.participantList[0].user
+                                                    .profileImageUrl
+                                            }
+                                        />
+                                    ) : (
+                                        <ContentProfileImg />
+                                    )}
                                     <ContentTitle>{list.name}</ContentTitle>
                                 </ChatList>
                             ))}

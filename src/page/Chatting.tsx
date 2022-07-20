@@ -13,7 +13,7 @@ import SockJS from 'sockjs-client';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { chattingStore, userInfo } from '../recoil/store';
-import { useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { ImExit } from 'react-icons/im';
 import axios from 'axios';
 import setupInterceptorsTo from '../Api/Interceptors';
@@ -26,6 +26,8 @@ interface chatList {
     roomId: string;
     sender: string;
     message: string;
+    type: string;
+    profileImageUrl: string;
 }
 
 const Content = styled.div`
@@ -45,6 +47,9 @@ type props = {
     display?: string;
     color?: string;
     fontColor?: string;
+    imgUrl?: string;
+    fontSize?: string;
+    maxWidth?: string;
 };
 const ChatDiv = styled.div`
     display: flex;
@@ -62,7 +67,7 @@ const ContentProfileImg = styled.div`
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    background-image: url('/img/호랑이.jpg');
+    background-image: url(${(props: props) => props.imgUrl});
     background-position: center;
     background-size: cover;
 `;
@@ -75,7 +80,8 @@ const ContentProfileName = styled.div`
 `;
 
 const ChatConent = styled.div`
-    max-width: 60%;
+    max-width: ${(props: props) => (props.maxWidth ? props.maxWidth : '60%')};
+    font-size: ${(props: props) => (props.fontSize ? props.fontSize : '')};
     display: flex;
     color: ${(props: props) => props.fontColor};
     background-color: ${(props: props) => props.color};
@@ -162,6 +168,7 @@ export const Chatting = () => {
     };
     const userChatList: any = useQuery('chattingList', getChatApi, {
         onSuccess: (res: any) => {
+            console.log(res);
             setChattingList(res.data.content);
         },
     });
@@ -195,7 +202,23 @@ export const Chatting = () => {
             console.log(error);
         }
     }
+    const deleteChatRoom = (data: { roomId: string }) => {
+        deleteChat.mutate(data);
+    };
+
+    const deleteChat = useMutation(
+        (data: { roomId: string }) => callUpApi.deleteChatApi(data),
+        {
+            onSuccess: (res) => {
+                console.log(res);
+            },
+        },
+    );
     function wsDisConnectUnsubscribe() {
+        if (roomId) {
+            deleteChatRoom({ roomId: roomId });
+        }
+
         try {
             if (localToken) {
                 const toto = JSON.parse(localToken);
@@ -207,13 +230,13 @@ export const Chatting = () => {
                         sender: userdata.nick,
                         message: msg,
                     };
+                    ws.send(
+                        `/pub/chat/message`,
+                        { Authorization: access },
+                        JSON.stringify(data),
+                    );
                     ws.disconnect(
                         () => {
-                            ws.send(
-                                `/pub/chat/message`,
-                                { Authorization: access },
-                                JSON.stringify(data),
-                            );
                             if (roomId) {
                                 ws.unsubscribe(roomId);
                             }
@@ -299,12 +322,27 @@ export const Chatting = () => {
                 size="25"
                 onClick={() => {
                     wsDisConnectUnsubscribe();
+                    queryClient.invalidateQueries('chatList');
                     nav(-1);
                 }}
             />
             <Content>
                 {chattinglist.map((chat: chatList, i: number) => {
-                    if (chat.roomId === roomId) {
+                    if (chat.sender === '[알림]') {
+                        console.log('???');
+                        return (
+                            <ChatDiv key={i} position="center">
+                                <ChatConent
+                                    fontSize="12px"
+                                    color="#cfcfcfd1"
+                                    fontColor="#f5f5f5"
+                                    maxWidth="90%"
+                                >
+                                    {chat.message}
+                                </ChatConent>
+                            </ChatDiv>
+                        );
+                    } else {
                         return (
                             <ChatDiv
                                 key={i}
@@ -321,7 +359,9 @@ export const Chatting = () => {
                                             : 'flex'
                                     }
                                 >
-                                    <ContentProfileImg />
+                                    <ContentProfileImg
+                                        imgUrl={chat.profileImageUrl}
+                                    />
                                     <ContentProfileName>
                                         {chat.sender}
                                     </ContentProfileName>

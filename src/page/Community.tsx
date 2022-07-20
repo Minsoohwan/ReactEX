@@ -16,6 +16,8 @@ import setupInterceptorsTo from '../Api/Interceptors';
 import axios from 'axios';
 import { useInfiniteQuery, useQueryClient } from 'react-query';
 import { useInView } from 'react-intersection-observer';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { searchingStore } from '../recoil/store';
 
 const WhiteBoard = styled.div`
     position: relative;
@@ -243,13 +245,26 @@ const Count = styled.div`
 `;
 export const Community = () => {
     const [showReq, setShowReq] = useState<boolean>(false);
-    const [select, setSelect] = useState<string>('all');
+    const [select, setSelect] = useState<string>('');
+    const [searchValue, setSearchValue] = useState<{
+        value: string;
+        state: boolean;
+    }>({ value: '', state: false });
+    const search = useRecoilValue(searchingStore);
     const [ref, isView] = useInView();
     const nav = useNavigate();
 
     function closeReq() {
         setShowReq(!showReq);
     }
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchValue({ ...searchValue, value: e.target.value });
+    };
+    const keyUpEvent = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            setSearchValue({ ...searchValue, state: !searchValue.state });
+        }
+    };
     const baseApi = axios.create({
         baseURL: 'https://todowith.shop',
         timeout: 1000,
@@ -258,7 +273,7 @@ export const Community = () => {
     const callApi = setupInterceptorsTo(baseApi);
     const getBoard = async ({ pageParam = 0 }) => {
         const res = await callApi.get(
-            `/board?size=10&page=${pageParam}&filter=${select}`,
+            `/board?size=10&page=${pageParam}&filter=${select}&sub=${search}&keyword=${searchValue.value}`,
         );
 
         return {
@@ -279,7 +294,6 @@ export const Community = () => {
 
             {
                 getNextPageParam: (lastPage) => {
-                    console.log(lastPage);
                     // lastPage와 pages는 콜백함수에서 리턴한 값을 의미한다!!
                     // lastPage: 직전에 반환된 리턴값, pages: 여태 받아온 전체 페이지
                     if (lastPage.page + 1 !== lastPage.isLast)
@@ -302,6 +316,9 @@ export const Community = () => {
     useEffect(() => {
         refetch();
     }, [select]);
+    useEffect(() => {
+        refetch();
+    }, [searchValue.state]);
     return (
         <WhiteBoard>
             <TopBar />
@@ -312,16 +329,28 @@ export const Community = () => {
             <SearchingDiv>
                 <SearchingDropDown />
                 <SearchingInputPosition>
-                    <SearchingInput placeholder="내용을 입력해 주세요." />
+                    <SearchingInput
+                        placeholder="내용을 입력해 주세요."
+                        value={searchValue.value}
+                        onKeyUp={keyUpEvent}
+                        onChange={onChange}
+                    />
                 </SearchingInputPosition>
-                <SearchingButton>
+                <SearchingButton
+                    onClick={() => {
+                        setSearchValue({
+                            ...searchValue,
+                            state: !searchValue.state,
+                        });
+                    }}
+                >
                     <AiOutlineSearch size={18} />
                 </SearchingButton>
                 <TextDiv>
                     <PlanText
-                        color={select === 'all' ? 'black' : '#949494'}
+                        color={select === '' ? 'black' : '#949494'}
                         onClick={() => {
-                            setSelect('all');
+                            setSelect('');
                         }}
                     >
                         전체보기

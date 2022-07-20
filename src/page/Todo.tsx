@@ -5,6 +5,7 @@ import {
     BsFillCalendarXFill,
     BsFillCalendar2CheckFill,
     BsFillTrashFill,
+    BsFillPeopleFill,
 } from 'react-icons/bs';
 import { FaPencilAlt } from 'react-icons/fa';
 import TopBar from '../components/TopBar';
@@ -16,15 +17,8 @@ import AddListModal from '../components/AddListModal';
 import TopBack from '../components/TopBack';
 import AppBack from '../components/AppBack';
 import UserModal from '../components/UserMenu';
-import { useRecoilState } from 'recoil';
-import { planStore } from '../recoil/store';
-import {
-    useInfiniteQuery,
-    useMutation,
-    useQuery,
-    useQueryClient,
-} from 'react-query';
-import axios from 'axios';
+import { useInfiniteQuery, useMutation, useQueryClient } from 'react-query';
+import axios, { Axios, AxiosError } from 'axios';
 import setupInterceptorsTo from '../Api/Interceptors';
 import { useInView } from 'react-intersection-observer';
 import { callUpApi } from '../Api/callAPi';
@@ -79,6 +73,9 @@ export const ListTitle = styled.div`
     height: 20px;
     font-size: 15px;
     display: -webkit-box;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     overflow: hidden;
     font-weight: bolder !important;
     margin: 5px;
@@ -184,6 +181,9 @@ export const Todo = () => {
             onSuccess: (res: any) => {
                 queryClient.invalidateQueries('planData');
             },
+            onError: (err: AxiosError<{ msg: string }>) => {
+                alert(err.response?.data.msg);
+            },
         },
     );
 
@@ -197,6 +197,7 @@ export const Todo = () => {
     useEffect(() => {
         refetch();
     }, [filter]);
+
     return (
         <WhiteBoard>
             <TopBar />
@@ -267,38 +268,49 @@ export const Todo = () => {
                                                   className="planIcon"
                                               />
                                           )}
-
+                                          {v.boardId && (
+                                              <BsFillPeopleFill
+                                                  size={15}
+                                                  className="planIcon"
+                                                  color="#14943f"
+                                              />
+                                          )}
                                           <ListTitle>
                                               {v.todoContent} {v.todoDate}
                                           </ListTitle>
-                                          <IconDiv>
-                                              {!v.state && (
-                                                  <FaPencilAlt
+                                          {v.boardId ? null : (
+                                              <IconDiv>
+                                                  {!v.state && (
+                                                      <FaPencilAlt
+                                                          className="todoIcon"
+                                                          size={15}
+                                                          onClick={(e) => {
+                                                              setListId(
+                                                                  v.todoId,
+                                                              );
+                                                              setContent(
+                                                                  v.todoContent,
+                                                              );
+                                                              setListDate(
+                                                                  v.todoDate,
+                                                              );
+                                                              e.stopPropagation();
+                                                              closeEdit();
+                                                          }}
+                                                      />
+                                                  )}
+                                                  <BsFillTrashFill
+                                                      onClick={(e) => {
+                                                          e.stopPropagation();
+                                                          deletePlanList(
+                                                              v.todoId,
+                                                          );
+                                                      }}
                                                       className="todoIcon"
                                                       size={15}
-                                                      onClick={(e) => {
-                                                          setListId(v.todoId);
-                                                          setContent(
-                                                              v.todoContent,
-                                                          );
-                                                          setListDate(
-                                                              v.todoDate,
-                                                          );
-                                                          e.stopPropagation();
-                                                          closeEdit();
-                                                      }}
                                                   />
-                                              )}
-
-                                              <BsFillTrashFill
-                                                  className="todoIcon"
-                                                  size={15}
-                                                  onClick={(e) => {
-                                                      e.stopPropagation();
-                                                      deletePlanList(v.todoId);
-                                                  }}
-                                              />
-                                          </IconDiv>
+                                              </IconDiv>
+                                          )}
                                       </List>
                                   );
                               } else {
@@ -327,37 +339,50 @@ export const Todo = () => {
                                                   className="planIcon"
                                               />
                                           )}
+                                          {v.boardId && (
+                                              <BsFillPeopleFill
+                                                  size={15}
+                                                  className="planIcon"
+                                                  color="#14943f"
+                                              />
+                                          )}
 
                                           <ListTitle>
                                               {v.todoContent} {v.todoDate}
                                           </ListTitle>
-                                          <IconDiv>
-                                              {!v.state && (
-                                                  <FaPencilAlt
+                                          {v.boardId ? null : (
+                                              <IconDiv>
+                                                  {!v.state && (
+                                                      <FaPencilAlt
+                                                          className="todoIcon"
+                                                          size={15}
+                                                          onClick={(e) => {
+                                                              setListId(
+                                                                  v.todoId,
+                                                              );
+                                                              setContent(
+                                                                  v.todoContent,
+                                                              );
+                                                              setListDate(
+                                                                  v.todoDate,
+                                                              );
+                                                              e.stopPropagation();
+                                                              closeEdit();
+                                                          }}
+                                                      />
+                                                  )}
+                                                  <BsFillTrashFill
+                                                      onClick={(e) => {
+                                                          e.stopPropagation();
+                                                          deletePlanList(
+                                                              v.todoId,
+                                                          );
+                                                      }}
                                                       className="todoIcon"
                                                       size={15}
-                                                      onClick={(e) => {
-                                                          setListId(v.todoId);
-                                                          setContent(
-                                                              v.todoContent,
-                                                          );
-                                                          setListDate(
-                                                              v.todoDate,
-                                                          );
-                                                          e.stopPropagation();
-                                                          closeEdit();
-                                                      }}
                                                   />
-                                              )}
-                                              <BsFillTrashFill
-                                                  onClick={(e) => {
-                                                      e.stopPropagation();
-                                                      deletePlanList(v.todoId);
-                                                  }}
-                                                  className="todoIcon"
-                                                  size={15}
-                                              />
-                                          </IconDiv>
+                                              </IconDiv>
+                                          )}
                                       </List>
                                   );
                               }

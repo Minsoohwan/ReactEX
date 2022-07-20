@@ -141,7 +141,6 @@ const SelectButton = styled.button`
 const AddListModal = (props: props) => {
     const { open, close, title, type, propsContent, todoId, listDate } = props;
     const [showReq, setShowReq] = useRecoilState<boolean>(calenderState);
-    const [boardId, setBoardId] = useState<number>(0);
     const [content, setContent] = useState<any>('');
     const [categori, setCategori] = useState<string>('');
     function closeReq() {
@@ -153,7 +152,6 @@ const AddListModal = (props: props) => {
     const queryClient = useQueryClient();
     const [date, setDate] = useRecoilState<string[]>(dateState);
     const planData = {
-        boardId: boardId,
         category: categori,
         content: content,
         todoDateList: date,
@@ -178,7 +176,6 @@ const AddListModal = (props: props) => {
     });
     const editData = {
         data: {
-            boardId: boardId,
             category: categori,
             content: content,
             todoDate: listDate,
@@ -293,7 +290,7 @@ const AddListModal = (props: props) => {
                         </CatagoriButton>
                         <CatagoriButton
                             back={'/img/일상.jpg'}
-                            onClick={() => setCategori('PROMISE ')}
+                            onClick={() => setCategori('PROMISE')}
                         >
                             일상
                         </CatagoriButton>

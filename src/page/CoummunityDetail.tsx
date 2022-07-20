@@ -218,6 +218,7 @@ export const CommunityDetail = () => {
         baseURL: 'https://todowith.shop',
         timeout: 1000,
     });
+    const chatQuery: any = useQuery('chatList', callUpApi.getChatListApi, {});
 
     const callApi = setupInterceptorsTo(baseApi);
 
@@ -225,11 +226,7 @@ export const CommunityDetail = () => {
         const detail = await callApi.get(`/board/${boardId}`);
         return detail;
     };
-    const boardDetail = useQuery('boardDetail', getDetail, {
-        onSuccess: (res) => {
-            console.log(res);
-        },
-    });
+    const boardDetail = useQuery('boardDetail', getDetail);
 
     const joinTodo = () => {
         if (boardId) {
@@ -238,11 +235,9 @@ export const CommunityDetail = () => {
     };
     const letJoin = useMutation((id: string) => callUpApi.joinTodoApi(id), {
         onSuccess: (res) => {
-            console.log(res);
             queryClient.invalidateQueries('boardDetail');
         },
         onError: (err: AxiosError<{ msg: string }>) => {
-            console.log(err);
             alert(err.response?.data.msg);
         },
     });
@@ -253,12 +248,10 @@ export const CommunityDetail = () => {
         (data: { roomId: string }) => callUpApi.enterPublicApi(data),
         {
             onSuccess: (res) => {
-                console.log(res);
                 setjoin(!join);
                 queryClient.invalidateQueries('chatList');
             },
             onError: (err: AxiosError<{ msg: string }>) => {
-                console.log(err);
                 alert(err.response?.data.msg);
             },
         },
@@ -389,34 +382,61 @@ export const CommunityDetail = () => {
                     </ContentDiv>
                     {boardDetail.data.data.category === 'CHALLENGE' && (
                         <JoinButton
-                            join={join}
-                            color={join ? '#999999' : '#272626'}
+                            join={boardDetail.data.data.participating}
+                            color={
+                                boardDetail.data.data.participating
+                                    ? '#999999'
+                                    : '#272626'
+                            }
                             onClick={
                                 join
                                     ? () => {
                                           cancleTodo();
+                                          queryClient.invalidateQueries(
+                                              'boardDetail',
+                                          );
                                       }
                                     : () => {
                                           joinTodo();
+                                          queryClient.invalidateQueries(
+                                              'boardDetail',
+                                          );
                                       }
                             }
                         >
-                            {join ? 'Now Doing...' : "Let's Do it!"}
+                            {boardDetail.data.data.participating
+                                ? 'Now Doing...'
+                                : "Let's Do it!"}
                         </JoinButton>
                     )}
 
-                    {join && (
+                    {boardDetail.data.data.participating && (
                         <JoinButton
-                            join={!join}
+                            join={!boardDetail.data.data.participating}
                             color="#272626"
-                            onClick={() => {
-                                enterChat({
-                                    roomId: boardDetail.data.data.chatRoomId,
-                                });
-                                nav(
-                                    `/chat/${boardDetail.data.data.chatRoomId}`,
-                                );
-                            }}
+                            onClick={
+                                chatQuery.status === 'success' &&
+                                chatQuery.data.data.map((v: any, i: number) => {
+                                    if (
+                                        v.rooomId ===
+                                        boardDetail.data.data.chatRoomId
+                                    ) {
+                                        return true;
+                                    } else return false;
+                                })
+                                    ? () => {
+                                          alert('이미 침여중인 채팅입니다.');
+                                      }
+                                    : () => {
+                                          enterChat({
+                                              roomId: boardDetail.data.data
+                                                  .chatRoomId,
+                                          });
+                                          nav(
+                                              `/chat/${boardDetail.data.data.chatRoomId}`,
+                                          );
+                                      }
+                            }
                         >
                             채팅 참여하기
                         </JoinButton>

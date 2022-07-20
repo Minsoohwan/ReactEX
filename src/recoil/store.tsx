@@ -20,6 +20,8 @@ interface list {
         study: number;
         type: string;
     };
+    todayTodoList: [];
+    publicScope: string;
     createdDate: Date;
     email: string;
     id: number;
@@ -56,10 +58,7 @@ export const requestsFriendsList = atom({
     key: 'requestsFriendsList',
     default: [] as [],
 });
-export const webSocketStore = atom({
-    key: 'webSocketStore',
-    default: '' as any,
-});
+
 export const chatStore = atom({
     key: 'chatStore',
     default: [] as [],
@@ -72,13 +71,12 @@ export const planStore = atom({
     key: 'planStore',
     default: [] as any[],
 });
+export const searchingStore = atom({
+    key: 'searchingStore',
+    default: 'title' as string,
+});
 export const accessTokenState = atom({
     key: 'access',
-    default: '',
-    effects_UNSTABLE: [persistAtom],
-});
-export const refreshTokenState = atom({
-    key: 'refresh',
     default: '',
     effects_UNSTABLE: [persistAtom],
 });

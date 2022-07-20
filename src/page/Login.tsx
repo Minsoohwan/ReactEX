@@ -6,7 +6,7 @@ import { useMutation } from 'react-query';
 import { callUpApi } from '../Api/callAPi';
 import { useResetRecoilState, useSetRecoilState } from 'recoil';
 import { AxiosError } from 'axios';
-import { accessTokenState, refreshTokenState } from '../recoil/store';
+import { accessTokenState } from '../recoil/store';
 
 export const WhiteBoard = styled.div`
     position: relative;
@@ -107,7 +107,7 @@ export const Login = () => {
         password: password,
     };
     const loginToken = useSetRecoilState(accessTokenState);
-    const refreshToken = useSetRecoilState(refreshTokenState);
+
     const loginFunc = () => {
         login.mutate(loginData);
     };
@@ -115,7 +115,6 @@ export const Login = () => {
         onSuccess: (res) => {
             console.log(res);
             loginToken(res.headers.authorization);
-            refreshToken(res.headers.refresh);
             nav('/');
             alert(res.data);
         },
@@ -160,15 +159,6 @@ export const Login = () => {
                     회원가입 <GoSignIn />
                 </SignUpLink>
             </SignUpBox>
-            <button
-                onClick={() =>
-                    window.location.replace(
-                        'http://todowith.shop/oauth2/authorization/google?redirect_uri=http://localhost:3000',
-                    )
-                }
-            >
-                sdaf
-            </button>
         </WhiteBoard>
     );
 };

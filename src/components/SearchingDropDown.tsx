@@ -2,6 +2,8 @@ import React, { PropsWithChildren } from 'react';
 import '../css/dropDown.css';
 import { BsChevronDown } from 'react-icons/bs';
 import styled from 'styled-components';
+import { useRecoilState } from 'recoil';
+import { searchingStore } from '../recoil/store';
 
 const DropDownArticle = styled.article`
     position: absolute;
@@ -53,7 +55,7 @@ const DropDownLi = styled.li`
 const SearchingDropDown = () => {
     const [dropdownVisibility, setDropdownVisibility] = React.useState(false);
     const [visibilityAnimation, setVisibilityAnimation] = React.useState(false);
-    const [scope, setScope] = React.useState<String>('제목');
+    const [search, setSearch] = useRecoilState(searchingStore);
     React.useEffect(() => {
         if (dropdownVisibility) {
             setVisibilityAnimation(true);
@@ -68,7 +70,7 @@ const SearchingDropDown = () => {
             <DropDownButton
                 onClick={() => setDropdownVisibility(!dropdownVisibility)}
             >
-                {scope}
+                {search === 'title' ? '제목' : '내용'}
                 <BsChevronDown className="drop" size="12" />
             </DropDownButton>
             <DropDownDiv
@@ -82,7 +84,7 @@ const SearchingDropDown = () => {
                     <DropDownUl>
                         <DropDownLi
                             onClick={() => {
-                                setScope('제목');
+                                setSearch('title');
                                 setDropdownVisibility(!dropdownVisibility);
                             }}
                         >
@@ -91,18 +93,17 @@ const SearchingDropDown = () => {
 
                         <DropDownLi
                             onClick={() => {
-                                setScope('번호');
+                                setSearch('content');
                                 setDropdownVisibility(!dropdownVisibility);
                             }}
                         >
-                            번호
+                            내용
                         </DropDownLi>
                     </DropDownUl>
                 ) : dropdownVisibility === false && visibilityAnimation ? (
                     <DropDownUl>
                         <DropDownLi
                             onClick={() => {
-                                setScope('제목');
                                 setDropdownVisibility(!dropdownVisibility);
                             }}
                         >
@@ -111,11 +112,10 @@ const SearchingDropDown = () => {
 
                         <DropDownLi
                             onClick={() => {
-                                setScope('번호');
                                 setDropdownVisibility(!dropdownVisibility);
                             }}
                         >
-                            번호
+                            내용
                         </DropDownLi>
                     </DropDownUl>
                 ) : null}

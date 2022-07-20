@@ -16,7 +16,6 @@ const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
         if (toto) {
             config.headers = {
                 Authorization: toto.access || 0 || false,
-                Refresh: toto.refresh || 0 || false,
                 'Content-Type': 'application/json',
             };
         }
@@ -33,13 +32,11 @@ const onRequestError = (error: AxiosError): Promise<AxiosError> => {
             console.log('??');
             const toto = JSON.parse(localToken);
             const accessToken = toto.access;
-            const refreshToken = toto.refresh;
 
             axios
                 .get('https://todowith.shop/refresh', {
                     headers: {
                         Authorization: accessToken,
-                        Refresh: refreshToken,
                         'Content-Type': 'application/json',
                     },
                 })
@@ -48,25 +45,9 @@ const onRequestError = (error: AxiosError): Promise<AxiosError> => {
                         'recoil-persist',
                         JSON.stringify({
                             access: res.headers.authorization,
-                            refresh: res.headers.refresh,
                         }),
                     );
                 });
-            // .then(() => {
-            //     const token = localStorage.getItem('recoil-persist');
-            //     if (token) {
-            //         const JSONToken = JSON.parse(token);
-            //         const access = JSONToken.access;
-            //         const refresh = JSONToken.refresh;
-            //         originalRequest.headers = {
-            //             Authorization: access,
-            //             Refresh: refresh,
-            //             'Content-Type': 'application/json',
-            //         };
-            //         console.log(originalRequest);
-            //         axios(originalRequest);
-            //     }
-            // });
         }
         return Promise.reject(error);
     }
@@ -85,40 +66,21 @@ const onResponseError = (error: AxiosError): Promise<AxiosError> => {
         if (localToken) {
             const toto = JSON.parse(localToken);
             const accessToken = toto.access;
-            const refreshToken = toto.refresh;
             axios
                 .get('https://todowith.shop/refresh', {
                     headers: {
                         Authorization: accessToken,
-                        Refresh: refreshToken,
                         'Content-Type': 'application/json',
                     },
                 })
                 .then((res) => {
-                    console.log('??');
                     localStorage.setItem(
                         'recoil-persist',
                         JSON.stringify({
                             access: res.headers.authorization,
-                            refresh: res.headers.refresh,
                         }),
                     );
                 });
-            //     .then(() => {
-            //         const token = localStorage.getItem('recoil-persist');
-            //         if (token) {
-            //             const JSONToken = JSON.parse(token);
-            //             const access = JSONToken.access;
-            //             const refresh = JSONToken.refresh;
-            //             originalRequest.headers = {
-            //                 Authorization: access,
-            //                 Refresh: refresh,
-            //                 'Content-Type': 'application/json',
-            //             };
-            //             console.log(originalRequest);
-            //             axios(originalRequest);
-            //         }
-            //     });
         }
         return Promise.reject(error);
     }

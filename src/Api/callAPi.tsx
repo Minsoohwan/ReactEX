@@ -118,6 +118,10 @@ const enterPublicApi = async (data: { roomId: string }) => {
     const epa = await callApi.post('/chat/room/enter/public', data);
     return epa;
 };
+const deleteChatApi = async (data: { roomId: string }) => {
+    const dca = await callApi.delete('/chat/room', { data: data });
+    return dca;
+};
 const changePasswordApi = async (data: {
     newPassword: string;
     oldPassword: string;
@@ -184,4 +188,5 @@ export const callUpApi = {
     joinTodoApi: (id: string) => joinTodoApi(id),
     cancleTodoApi: (id: string) => cancleTodoApi(id),
     enterPublicApi: (data: { roomId: string }) => enterPublicApi(data),
+    deleteChatApi: (data: { roomId: string }) => deleteChatApi(data),
 };
