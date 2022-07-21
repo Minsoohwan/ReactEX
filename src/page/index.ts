@@ -11,3 +11,4 @@ export * from './AddPost';
 export * from './EditPost';
 export * from './Friends';
 export * from './ChangePassWord';
+export * from './FriendsMain';

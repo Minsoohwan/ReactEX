@@ -21,6 +21,7 @@ import UserModal from '../components/UserMenu';
 import { Frame } from '@stomp/stompjs';
 import { TbChevronsDownLeft } from 'react-icons/tb';
 import { callUpApi } from '../Api/callAPi';
+import { createDateTime } from './Community';
 
 interface chatList {
     roomId: string;
@@ -28,6 +29,7 @@ interface chatList {
     message: string;
     type: string;
     profileImageUrl: string;
+    createdDate: string;
 }
 
 const Content = styled.div`
@@ -50,6 +52,7 @@ type props = {
     imgUrl?: string;
     fontSize?: string;
     maxWidth?: string;
+    flexDirection?: string;
 };
 const ChatDiv = styled.div`
     display: flex;
@@ -78,7 +81,17 @@ const ContentProfileName = styled.div`
     font-size: 12px;
     font-weight: bold;
 `;
-
+const ChatContentDiv = styled.div`
+    display: flex;
+    width: 100%;
+    flex-direction: ${(props: props) => props.flexDirection};
+`;
+const TimeDiv = styled.div`
+    display: flex;
+    align-items: flex-end;
+    font-size: 12px;
+    font-weight: bold;
+`;
 const ChatConent = styled.div`
     max-width: ${(props: props) => (props.maxWidth ? props.maxWidth : '60%')};
     font-size: ${(props: props) => (props.fontSize ? props.fontSize : '')};
@@ -89,6 +102,7 @@ const ChatConent = styled.div`
     border-radius: 10px;
     padding: 10px;
 `;
+
 const ChatBox = styled.div`
     position: fixed;
     bottom: 70px;
@@ -329,7 +343,6 @@ export const Chatting = () => {
             <Content>
                 {chattinglist.map((chat: chatList, i: number) => {
                     if (chat.sender === '[알림]') {
-                        console.log('???');
                         return (
                             <ChatDiv key={i} position="center">
                                 <ChatConent
@@ -341,6 +354,80 @@ export const Chatting = () => {
                                     {chat.message}
                                 </ChatConent>
                             </ChatDiv>
+                        );
+                    } else if (
+                        i === chattinglist.length - 1 ||
+                        (i > 0 &&
+                            createDateTime(
+                                chattinglist[i - 1].createdDate,
+                            )[0] !==
+                                createDateTime(chattinglist[i].createdDate)[0])
+                    ) {
+                        return (
+                            <>
+                                <ChatDiv
+                                    key={i}
+                                    position={
+                                        userdata.nick === chat.sender
+                                            ? 'flex-end'
+                                            : 'flex-start'
+                                    }
+                                >
+                                    <Profile
+                                        display={
+                                            userdata.nick === chat.sender
+                                                ? 'none'
+                                                : 'flex'
+                                        }
+                                    >
+                                        <ContentProfileImg
+                                            imgUrl={chat.profileImageUrl}
+                                        />
+                                        <ContentProfileName>
+                                            {chat.sender}
+                                        </ContentProfileName>
+                                    </Profile>
+                                    <ChatContentDiv
+                                        flexDirection={
+                                            userdata.nick === chat.sender
+                                                ? 'row-reverse'
+                                                : 'row'
+                                        }
+                                    >
+                                        <ChatConent
+                                            color={
+                                                userdata.nick === chat.sender
+                                                    ? 'blue'
+                                                    : '#cfcfcf'
+                                            }
+                                            fontColor={
+                                                userdata.nick === chat.sender
+                                                    ? 'white'
+                                                    : 'black'
+                                            }
+                                        >
+                                            {chat.message}
+                                        </ChatConent>
+                                        <TimeDiv>
+                                            {
+                                                createDateTime(
+                                                    chat.createdDate,
+                                                )[1]
+                                            }
+                                        </TimeDiv>
+                                    </ChatContentDiv>
+                                </ChatDiv>
+                                <ChatDiv key={i + 500} position="center">
+                                    <ChatConent
+                                        fontSize="12px"
+                                        color="#acacacb0"
+                                        fontColor="#ffffff"
+                                        maxWidth="90%"
+                                    >
+                                        {createDateTime(chat.createdDate)[0]}
+                                    </ChatConent>
+                                </ChatDiv>
+                            </>
                         );
                     } else {
                         return (
@@ -366,20 +453,31 @@ export const Chatting = () => {
                                         {chat.sender}
                                     </ContentProfileName>
                                 </Profile>
-                                <ChatConent
-                                    color={
+                                <ChatContentDiv
+                                    flexDirection={
                                         userdata.nick === chat.sender
-                                            ? 'blue'
-                                            : '#cfcfcf'
-                                    }
-                                    fontColor={
-                                        userdata.nick === chat.sender
-                                            ? 'white'
-                                            : 'black'
+                                            ? 'row-reverse'
+                                            : 'row'
                                     }
                                 >
-                                    {chat.message}
-                                </ChatConent>
+                                    <ChatConent
+                                        color={
+                                            userdata.nick === chat.sender
+                                                ? 'blue'
+                                                : '#cfcfcf'
+                                        }
+                                        fontColor={
+                                            userdata.nick === chat.sender
+                                                ? 'white'
+                                                : 'black'
+                                        }
+                                    >
+                                        {chat.message}
+                                    </ChatConent>
+                                    <TimeDiv>
+                                        {createDateTime(chat.createdDate)[1]}
+                                    </TimeDiv>
+                                </ChatContentDiv>
                             </ChatDiv>
                         );
                     }

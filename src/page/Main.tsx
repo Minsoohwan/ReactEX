@@ -1,4 +1,4 @@
-import React, { KeyboardEvent, useEffect, useState } from 'react';
+import React, { KeyboardEvent, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import {
     BsFillCalendar2CheckFill,
@@ -13,24 +13,14 @@ import AppBar from '../components/AppBar';
 import Donut from '../components/Donut';
 import TopBar from '../components/TopBar';
 import { IconDiv, List, ListTitle } from './Todo';
-import {
-    QueryClient,
-    useInfiniteQuery,
-    useMutation,
-    useQuery,
-    useQueryClient,
-} from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { callUpApi } from '../Api/callAPi';
-import axios, { AxiosError } from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { AxiosError } from 'axios';
+import { useRecoilState } from 'recoil';
 import { userInfo } from '../recoil/store';
-import { jwtUtils } from '../Api/JwtUtils';
 import '../css/icon.css';
 import AppBack from '../components/AppBack';
 import UserModal from '../components/UserMenu';
-import setupInterceptorsTo from '../Api/Interceptors';
-import { useInView } from 'react-intersection-observer';
 import AskModal from '../components/AskModal';
 
 const WhiteBoard = styled.div`
@@ -92,9 +82,9 @@ const ExpState = styled.div`
 `;
 const ExpPercent = styled.div`
     position: absolute;
-    font-size: 15px;
+    font-size: 12px;
     font-weight: 800;
-    top: 15px;
+    top: 18px;
     left: 9px;
 `;
 const ProfileNameArea = styled.div`
@@ -217,7 +207,6 @@ export const Main = () => {
     const [animation, setAnimation] = useState<boolean>(true);
     const [userdata, setUserdata] = useRecoilState(userInfo);
     const [ask, setAsk] = useState<boolean>(false);
-
     const [showEdit, setShowEdit] = useState<boolean>(false);
 
     const queryClient = useQueryClient();
@@ -246,7 +235,13 @@ export const Main = () => {
             setUserdata(res.data);
             setProfileName(res.data.nick);
         },
+        onError: (err: AxiosError<{ msg: string }>) => {
+            if (err.message === 'Request failed with status code 401') {
+                window.location.reload();
+            }
+        },
     });
+    console.log(userdata);
     const nickUpdateApiFunc = () => {
         nickCheck.mutate(nickdata);
     };
@@ -377,7 +372,19 @@ export const Main = () => {
             <CharactorBox>
                 <Charactor
                     ani={animation}
-                    src="/img/알.png"
+                    src={
+                        userData.status === 'success' &&
+                        userdata.characterInfo.level < 5
+                            ? '/img/알.png'
+                            : userData.status === 'success' &&
+                              userdata.characterInfo.level < 10
+                            ? '/img/금간알.png'
+                            : userData.status === 'success' &&
+                              userdata.characterInfo.level < 15
+                            ? '/img/깨진알.png'
+                            : '/img/병아리.png'
+                    }
+                    // src="/img/알.png"
                     onClick={() => setAnimation(!animation)}
                 />
             </CharactorBox>

@@ -179,7 +179,7 @@ const ScheduleButton = styled.button`
 `;
 const PostButton = styled.button`
     width: 100%;
-    height: 50px;
+    min-height: 40px;
     border: none;
     border-radius: 10px;
     font-size: 20px;

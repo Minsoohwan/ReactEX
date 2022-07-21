@@ -21,6 +21,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { callUpApi } from '../Api/callAPi';
 import axios, { AxiosError } from 'axios';
 import UserModal from '../components/UserMenu';
+import { useNavigate } from 'react-router-dom';
 
 type props = {
     color?: string;
@@ -34,6 +35,7 @@ interface list {
     nick: string;
     profileImageUrl: string;
     id: number;
+    characterLevel: number;
 }
 const FriendsOutLine = styled.div`
     position: absolute;
@@ -109,6 +111,8 @@ export const Friends = () => {
     const [friends, setFriends] = useRecoilState(myFriendsList);
     const [requestFriendsList, setrequestFriendsList] =
         useRecoilState(requestsFriendsList);
+
+    const nav = useNavigate();
     function closeReq() {
         setShowReq(!showReq);
     }
@@ -118,7 +122,10 @@ export const Friends = () => {
     const queryClient = useQueryClient();
 
     const friendQuery: any = useQuery('friendList', callUpApi.friendsListApi, {
-        onSuccess: (res: any) => setFriends(res.data),
+        onSuccess: (res: any) => {
+            setFriends(res.data);
+            console.log(res);
+        },
     });
 
     const requestFriendQuery: any = useQuery(
@@ -223,7 +230,9 @@ export const Friends = () => {
                                 <ContentProfileName>
                                     {requestList.nick}
                                 </ContentProfileName>
-                                <ShowLevel>Lv:10</ShowLevel>
+                                <ShowLevel>
+                                    Lv:{requestList.characterLevel}
+                                </ShowLevel>
                                 <ResponseDiv>
                                     <Button
                                         color="white"
@@ -276,12 +285,17 @@ export const Friends = () => {
                 <FriendsDiv display={listFriends ? 'flex' : 'none'}>
                     {friends.map((list: list) => {
                         return (
-                            <ContentProfile key={list.id}>
+                            <ContentProfile
+                                key={list.id}
+                                onClick={() => {
+                                    nav(`/friends/${list.nick}`);
+                                }}
+                            >
                                 <ContentProfileImg url={list.profileImageUrl} />
                                 <ContentProfileName>
                                     {list.nick}
                                 </ContentProfileName>
-                                <ShowLevel>Lv:10</ShowLevel>
+                                <ShowLevel>Lv:{list.characterLevel}</ShowLevel>
                                 <ResponseDiv>
                                     <Button
                                         color="white"

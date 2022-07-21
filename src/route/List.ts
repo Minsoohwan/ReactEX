@@ -14,6 +14,7 @@ import {
     Friends,
     ChangePassWord,
     EditPost,
+    FriendsMain,
 } from './../page';
 interface Route {
     id: string;
@@ -86,5 +87,10 @@ export const List: Route[] = [
         id: 'ChangePassWord',
         path: '/changepassword',
         page: ChangePassWord,
+    },
+    {
+        id: 'FriendsMain',
+        path: '/friends/:id',
+        page: FriendsMain,
     },
 ];
