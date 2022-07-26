@@ -1,29 +1,23 @@
-import React, { KeyboardEvent, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import {
     BsFillCalendar2CheckFill,
     BsFillCalendarXFill,
     BsFillPeopleFill,
 } from 'react-icons/bs';
-import { BsFillTrashFill } from 'react-icons/bs';
-import { AiFillCamera } from 'react-icons/ai';
-import { FaPencilAlt } from 'react-icons/fa';
 import AddListModal from '../components/AddListModal';
 import AppBar from '../components/AppBar';
 import Donut from '../components/Donut';
 import TopBar from '../components/TopBar';
-import { IconDiv, List, ListTitle } from './Todo';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { callUpApi } from '../Api/callAPi';
-import axios, { AxiosError } from 'axios';
-import { useRecoilState } from 'recoil';
-import { userInfo } from '../recoil/store';
+import { List, ListTitle } from './Todo';
+import { useQuery } from 'react-query';
+import axios from 'axios';
 import '../css/icon.css';
 import AppBack from '../components/AppBack';
 import UserModal from '../components/UserMenu';
 import AskModal from '../components/AskModal';
 import setupInterceptorsTo from '../Api/Interceptors';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const WhiteBoard = styled.div`
     position: relative;
@@ -207,10 +201,11 @@ export const FriendsMain = () => {
     const [animation, setAnimation] = useState<boolean>(true);
     const [ask, setAsk] = useState<boolean>(false);
     const [showEdit, setShowEdit] = useState<boolean>(false);
+    const nav = useNavigate();
     const param = useParams();
     const nick = param.id;
     const baseApi = axios.create({
-        baseURL: 'http://todowith.shop',
+        baseURL: 'https://todowith.shop',
         timeout: 1000,
     });
     const callApi = setupInterceptorsTo(baseApi);
@@ -234,7 +229,12 @@ export const FriendsMain = () => {
     function closeReq() {
         setShowReq(!showReq);
     }
-
+    useEffect(() => {
+        if (!localToken) {
+            alert('로그인 정보가 없습니다.');
+            nav('/login?로그인+정보가+없습니다.');
+        }
+    }, [localToken]);
     return (
         <WhiteBoard
             onClick={

@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import AddListModal from '../components/AddListModal';
-import AppBack from '../components/AppBack';
-import AppBar from '../components/AppBar';
-import Title from '../components/Title';
-import TopBack from '../components/TopBack';
-import TopBar from '../components/TopBar';
 import { ContentProfile, ContentProfileName } from './Community';
-import { WhiteBoard } from './Login';
 import {
     BsCaretDownFill,
     BsCaretUpFill,
@@ -19,9 +12,10 @@ import { useRecoilState } from 'recoil';
 import { myFriendsList, requestsFriendsList } from '../recoil/store';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { callUpApi } from '../Api/callAPi';
-import axios, { AxiosError } from 'axios';
-import UserModal from '../components/UserMenu';
+import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
+import CommonLayout from '../Layout/CommonLayout';
+import { GiCycle } from 'react-icons/gi';
 
 type props = {
     color?: string;
@@ -104,7 +98,6 @@ const Button = styled.button`
     }
 `;
 export const Friends = () => {
-    const [showReq, setShowReq] = useState<boolean>(false);
     const [addFriends, setAddFriends] = useState<boolean>(false);
     const [requestFriends, setRequestFriends] = useState<boolean>(true);
     const [listFriends, setListFriends] = useState<boolean>(true);
@@ -113,9 +106,7 @@ export const Friends = () => {
         useRecoilState(requestsFriendsList);
 
     const nav = useNavigate();
-    function closeReq() {
-        setShowReq(!showReq);
-    }
+
     function closeAdd() {
         setAddFriends(!addFriends);
     }
@@ -124,7 +115,6 @@ export const Friends = () => {
     const friendQuery: any = useQuery('friendList', callUpApi.friendsListApi, {
         onSuccess: (res: any) => {
             setFriends(res.data);
-            console.log(res);
         },
     });
 
@@ -143,7 +133,6 @@ export const Friends = () => {
         (nick: { nick: string }) => callUpApi.deleteFriendsApi(nick),
         {
             onSuccess: (res) => {
-                console.log(res);
                 queryClient.invalidateQueries('friendList');
                 queryClient.invalidateQueries('requestFriendList');
             },
@@ -160,8 +149,7 @@ export const Friends = () => {
     const rejectFriends = useMutation(
         (nick: { nick: string }) => callUpApi.deleteRejectApi(nick),
         {
-            onSuccess: (res) => {
-                console.log(res);
+            onSuccess: () => {
                 queryClient.invalidateQueries('friendList');
                 queryClient.invalidateQueries('requestFriendList');
             },
@@ -181,7 +169,6 @@ export const Friends = () => {
             onSuccess: (res) => {
                 queryClient.invalidateQueries('friendList');
                 queryClient.invalidateQueries('requestFriendList');
-                console.log(res);
             },
             onError: (res: AxiosError) => {
                 if (res.message === 'Request failed with status code 401') {
@@ -190,16 +177,27 @@ export const Friends = () => {
             },
         },
     );
+    const localToken = localStorage.getItem('recoil-persist');
+    useEffect(() => {
+        if (!localToken) {
+            alert('로그인 정보가 없습니다.');
+            nav('/login?로그인+정보가+없습니다.');
+        }
+    }, [localToken]);
     return (
-        <WhiteBoard>
-            <TopBar />
-            <Title title="Friends" />
-            <TopBack />
-            <UserModal />
+        <CommonLayout title="Friends">
             <BsFillPersonPlusFill
                 className="addFriends"
                 size="30"
                 onClick={() => setAddFriends(!addFriends)}
+            />
+            <GiCycle
+                className="refreshFriends"
+                size="25"
+                onClick={() => {
+                    friendQuery.refetch();
+                    requestFriendQuery.refetch();
+                }}
             />
             <AddFriends open={addFriends} close={closeAdd} />
             <FriendsOutLine>
@@ -316,14 +314,6 @@ export const Friends = () => {
                     })}
                 </FriendsDiv>
             </FriendsOutLine>
-            <AddListModal
-                title="일정 추가하기"
-                open={showReq}
-                close={closeReq}
-                type="add"
-            />
-            <AppBack />
-            <AppBar close={closeReq} />
-        </WhiteBoard>
+        </CommonLayout>
     );
 };

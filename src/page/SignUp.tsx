@@ -1,7 +1,7 @@
-import React, { useState, KeyboardEvent } from 'react';
+import React, { useState, KeyboardEvent, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { AppName } from './Login';
+import { AppName, WhiteBoard } from './Login';
 import { TbEyeOff, TbEyeCheck } from 'react-icons/tb';
 import '../css/icon.css';
 import { callUpApi } from '../Api/callAPi';
@@ -21,33 +21,14 @@ interface emaildata {
     email: string;
     code: string;
 }
-const WhiteBoard = styled.div`
-    position: relative;
-    max-width: 768px;
-    width: 100%;
-    min-width: 375px;
-    margin: auto;
-    display: flex;
-    padding: 10px;
-    flex-direction: column;
-    /* align-items: center; */
-    justify-content: center;
-    border: 1px solid;
-    background-image: linear-gradient(
-            rgba(255, 255, 255, 0.8),
-            rgba(255, 255, 255, 0.8)
-        ),
-        url('/background.png');
-    background-size: auto;
-    background-position: -60px 15px;
-`;
+
 const SignUpInput = styled.input`
     width: 90%;
     height: 45px;
     border: 2px solid #857f7f7f;
     border-radius: 10px;
     padding: 10px;
-    margin: auto;
+    margin: 0 auto;
     &:focus {
         border: 2px solid #0338ca46;
         outline: 1px solid #0338ca46;
@@ -83,7 +64,7 @@ const CheckText = styled.p`
 const SignInEx = styled.a`
     font-size: 15px;
     font-weight: 700;
-    margin: auto;
+    margin: 0 auto;
     color: black;
     cursor: pointer;
     &:hover {
@@ -99,11 +80,9 @@ type position = {
 const EyeDiv = styled.div`
     position: absolute;
     bottom: ${(props: position) => props.bottom}px;
-    right: 45px;
-    height: 0;
+    right: 50px;
     width: 18px;
     display: flex;
-    background-color: red;
 `;
 
 export const SignUP = () => {
@@ -144,8 +123,8 @@ export const SignUP = () => {
         signUp.mutate(signUpData);
     };
     const signUp = useMutation((data: data) => callUpApi.signUpApi(data), {
-        onSuccess: (res) => {
-            console.log(res);
+        onSuccess: () => {
+            alert('회원가입을 축하드립니다!');
             nav('/login');
         },
         onError: (err: AxiosError<{ msg: string }>) => {
@@ -213,7 +192,6 @@ export const SignUP = () => {
         },
     );
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log();
         setEmailText(e.target.value);
     };
 
@@ -269,7 +247,13 @@ export const SignUP = () => {
     const passwordUnviewCheck = () => {
         setViewCheck(true);
     };
-
+    const localToken = localStorage.getItem('recoil-persist');
+    useEffect(() => {
+        if (localToken) {
+            alert('이미 로그인 돼있습니다.');
+            nav('/');
+        }
+    }, [localToken]);
     return (
         <WhiteBoard>
             <AppName>JUST DO IT!</AppName>
@@ -361,93 +345,101 @@ export const SignUP = () => {
                     ? '올바른 닉네임을 입력해 주세요'
                     : '닉네임은 영어, 한글, 숫자만으로 이루어진 2~15자로 작성해주세요.'}
             </CheckText>
-
-            <SignUpText>Password</SignUpText>
-            <SignUpInput
-                placeholder="Password"
-                type={view ? 'password' : 'text'}
-                value={password}
-                onChange={onChange2}
-            />
-            <CheckText
-                color={
-                    CheckPassword(password) && password
-                        ? 'blue'
-                        : password
-                        ? 'red'
-                        : 'black'
-                }
+            <div
+                style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    position: 'relative',
+                    gap: '10px',
+                }}
             >
-                {CheckPassword(password) && password
-                    ? '올바른 패스워드입니다.'
-                    : password
-                    ? '올바른 패스워드를 입력해 주세요'
-                    : '패스워드는 영문, 숫자, 특수문자를 포함해 5~10자로 작성해 주세요.'}
-            </CheckText>
-            <EyeDiv bottom="255">
-                {view ? (
-                    <TbEyeOff
-                        className="eye"
-                        onTouchStart={passwordView}
-                        onTouchEnd={passwordUnview}
-                        onMouseDown={passwordView}
-                        onMouseUp={passwordUnview}
-                    />
-                ) : (
-                    <TbEyeCheck
-                        className="eye"
-                        onTouchStart={passwordView}
-                        onTouchEnd={passwordUnview}
-                        onMouseDown={passwordView}
-                        onMouseUp={passwordUnview}
-                    />
-                )}
-            </EyeDiv>
-            <SignUpText>Password Check</SignUpText>
-            <SignUpInput
-                placeholder="Password check"
-                type={viewCheck ? 'password' : 'text'}
-                value={passwordCheck}
-                onChange={onChange3}
-            />
-            <CheckText
-                color={
-                    passwordCheck === password &&
+                <SignUpText>Password</SignUpText>
+                <SignUpInput
+                    placeholder="Password"
+                    type={view ? 'password' : 'text'}
+                    value={password}
+                    onChange={onChange2}
+                />
+                <CheckText
+                    color={
+                        CheckPassword(password) && password
+                            ? 'blue'
+                            : password
+                            ? 'red'
+                            : 'black'
+                    }
+                >
+                    {CheckPassword(password) && password
+                        ? '올바른 패스워드입니다.'
+                        : password
+                        ? '올바른 패스워드를 입력해 주세요'
+                        : '패스워드는 영문, 숫자, 특수문자를 포함해 5~10자로 작성해 주세요.'}
+                </CheckText>
+                <EyeDiv bottom="185">
+                    {view ? (
+                        <TbEyeOff
+                            className="eye"
+                            onTouchStart={passwordView}
+                            onTouchEnd={passwordUnview}
+                            onMouseDown={passwordView}
+                            onMouseUp={passwordUnview}
+                        />
+                    ) : (
+                        <TbEyeCheck
+                            className="eye"
+                            onTouchStart={passwordView}
+                            onTouchEnd={passwordUnview}
+                            onMouseDown={passwordView}
+                            onMouseUp={passwordUnview}
+                        />
+                    )}
+                </EyeDiv>
+                <SignUpText>Password Check</SignUpText>
+                <SignUpInput
+                    placeholder="Password check"
+                    type={viewCheck ? 'password' : 'text'}
+                    value={passwordCheck}
+                    onChange={onChange3}
+                />
+                <CheckText
+                    color={
+                        passwordCheck === password &&
+                        passwordCheck &&
+                        CheckPassword(password)
+                            ? 'blue'
+                            : passwordCheck
+                            ? 'red'
+                            : 'black'
+                    }
+                >
+                    {passwordCheck === password &&
                     passwordCheck &&
                     CheckPassword(password)
-                        ? 'blue'
+                        ? '패스워드가 일치합니다. 회원가입을 진행해 주세요.'
                         : passwordCheck
-                        ? 'red'
-                        : 'black'
-                }
-            >
-                {passwordCheck === password &&
-                passwordCheck &&
-                CheckPassword(password)
-                    ? '패스워드가 일치합니다. 회원가입을 진행해 주세요.'
-                    : passwordCheck
-                    ? '패스워드를 확인해 주세요.'
-                    : '패스워드를 다시 입력해 주세요.'}
-            </CheckText>
-            <EyeDiv bottom="150">
-                {viewCheck ? (
-                    <TbEyeOff
-                        className="eye"
-                        onTouchStart={passwordViewCheck}
-                        onTouchEnd={passwordUnviewCheck}
-                        onMouseDown={passwordViewCheck}
-                        onMouseUp={passwordUnviewCheck}
-                    />
-                ) : (
-                    <TbEyeCheck
-                        className="eye"
-                        onTouchStart={passwordViewCheck}
-                        onTouchEnd={passwordUnviewCheck}
-                        onMouseDown={passwordViewCheck}
-                        onMouseUp={passwordUnviewCheck}
-                    />
-                )}
-            </EyeDiv>
+                        ? '패스워드를 확인해 주세요.'
+                        : '패스워드를 다시 입력해 주세요.'}
+                </CheckText>
+                <EyeDiv bottom="50">
+                    {viewCheck ? (
+                        <TbEyeOff
+                            className="eye"
+                            onTouchStart={passwordViewCheck}
+                            onTouchEnd={passwordUnviewCheck}
+                            onMouseDown={passwordViewCheck}
+                            onMouseUp={passwordUnviewCheck}
+                        />
+                    ) : (
+                        <TbEyeCheck
+                            className="eye"
+                            onTouchStart={passwordViewCheck}
+                            onTouchEnd={passwordUnviewCheck}
+                            onMouseDown={passwordViewCheck}
+                            onMouseUp={passwordUnviewCheck}
+                        />
+                    )}
+                </EyeDiv>
+            </div>
             <SignUpButton onClick={() => signUpApiFunc()}>Sign Up</SignUpButton>
             <SignInEx onClick={() => nav('/login')}>
                 Login 페이지로 돌아가기

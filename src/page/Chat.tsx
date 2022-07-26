@@ -5,16 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { callUpApi } from '../Api/callAPi';
-import AddListModal from '../components/AddListModal';
-import AppBack from '../components/AppBack';
-import AppBar from '../components/AppBar';
-import Title from '../components/Title';
-import TopBack from '../components/TopBack';
-import TopBar from '../components/TopBar';
-import UserModal from '../components/UserMenu';
+import CommonLayout from '../Layout/CommonLayout';
 import { chatStore, myFriendsList, userInfo } from '../recoil/store';
 import { ContentProfile } from './Community';
-import { WhiteBoard } from './Login';
 
 const ListOutLine = styled.div`
     position: absolute;
@@ -148,15 +141,12 @@ interface data {
     nick: string;
 }
 export const Chat = () => {
-    const [showReq, setShowReq] = useState<boolean>(false);
     const [listName, setListName] = useState<string>('Chat List');
     const [userdata, setUserdata] = useRecoilState(userInfo);
     const [chatList, setChatList] = useRecoilState(chatStore);
     const [friends, setFriends] = useRecoilState(myFriendsList);
     const queryClient = useQueryClient();
-    function closeReq() {
-        setShowReq(!showReq);
-    }
+
     const nav = useNavigate();
     const userData: any = useQuery('userData', callUpApi.getInfoApi, {
         onSuccess: (res: any) => {
@@ -192,13 +182,15 @@ export const Chat = () => {
             },
         },
     );
-    console.log(chatList);
+    const localToken = localStorage.getItem('recoil-persist');
+    useEffect(() => {
+        if (!localToken) {
+            alert('로그인 정보가 없습니다.');
+            nav('/login?로그인+정보가+없습니다.');
+        }
+    }, [localToken]);
     return (
-        <WhiteBoard>
-            <TopBar />
-            <Title title="Chatting" />
-            <TopBack />
-            <UserModal />
+        <CommonLayout title="Chatting">
             <ListOutLine>
                 <ButtonPosition>
                     <ListButton
@@ -268,7 +260,7 @@ export const Chat = () => {
                                             }
                                         />
                                     ) : (
-                                        <ContentProfileImg />
+                                        <ContentProfileImg url="/img/기본이미지.png" />
                                     )}
                                     <ContentTitle>{list.name}</ContentTitle>
                                 </ChatList>
@@ -302,14 +294,6 @@ export const Chat = () => {
                     )}
                 </ListDiv>
             </ListOutLine>
-            <AddListModal
-                title="일정 추가하기"
-                open={showReq}
-                close={closeReq}
-                type="add"
-            />
-            <AppBack />
-            <AppBar close={closeReq} />
-        </WhiteBoard>
+        </CommonLayout>
     );
 };

@@ -74,8 +74,7 @@ const AddFriends = (props: props) => {
     const request = useMutation(
         (data: { nick: string }) => callUpApi.requestFriendsApi(data),
         {
-            onSuccess: (res) => {
-                console.log(res);
+            onSuccess: () => {
                 close();
             },
             onError: (res: AxiosError) => {

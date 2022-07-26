@@ -1,14 +1,7 @@
 import React, { KeyboardEvent, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import AddListModal from '../components/AddListModal';
-import AppBar from '../components/AppBar';
-import Title from '../components/Title';
-import TopBack from '../components/TopBack';
-import TopBar from '../components/TopBar';
-import { WhiteBoard } from './Login';
 import { FiSend } from 'react-icons/fi';
-import AppBack from '../components/AppBack';
-import Stomp, { Message } from 'stompjs';
+import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
@@ -17,11 +10,9 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { ImExit } from 'react-icons/im';
 import axios from 'axios';
 import setupInterceptorsTo from '../Api/Interceptors';
-import UserModal from '../components/UserMenu';
-import { Frame } from '@stomp/stompjs';
-import { TbChevronsDownLeft } from 'react-icons/tb';
 import { callUpApi } from '../Api/callAPi';
 import { createDateTime } from './Community';
+import CommonLayout from '../Layout/CommonLayout';
 
 interface chatList {
     roomId: string;
@@ -146,11 +137,10 @@ const SendButton = styled.button`
 `;
 export const Chatting = () => {
     const baseApi = axios.create({
-        baseURL: 'http://todowith.shop',
+        baseURL: 'https://todowith.shop',
         timeout: 1000,
     });
 
-    const [showReq, setShowReq] = useState<boolean>(false);
     const [chattinglist, setChattingList] = useRecoilState(chattingStore);
     const [userdata, setUserdata] = useRecoilState(userInfo);
     const [msg, setmsg] = useState<string>('');
@@ -158,22 +148,16 @@ export const Chatting = () => {
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setmsg(e.target.value);
     };
-    function closeReq() {
-        setShowReq(!showReq);
-    }
 
     const userData: any = useQuery('userData', callUpApi.getInfoApi, {
         onSuccess: (res: any) => {
             setUserdata(res.data);
         },
-        onError: (res) => {
-            console.log(res);
-        },
     });
     const queryClient = useQueryClient();
     const params = useParams();
     const roomId = params.id;
-    const sock = new SockJS('http://todowith.shop/ws');
+    const sock = new SockJS('https://todowith.shop/ws');
     const ws = Stomp.over(sock);
     const callApi = setupInterceptorsTo(baseApi);
     const getChatApi = async () => {
@@ -220,13 +204,8 @@ export const Chatting = () => {
         deleteChat.mutate(data);
     };
 
-    const deleteChat = useMutation(
-        (data: { roomId: string }) => callUpApi.deleteChatApi(data),
-        {
-            onSuccess: (res) => {
-                console.log(res);
-            },
-        },
+    const deleteChat = useMutation((data: { roomId: string }) =>
+        callUpApi.deleteChatApi(data),
     );
     function wsDisConnectUnsubscribe() {
         if (roomId) {
@@ -315,22 +294,21 @@ export const Chatting = () => {
                             { Authorization: access },
                             JSON.stringify(data),
                         );
-                        console.log(ws.ws.readyState);
                     });
                 }
             }
         } catch (error) {
             console.log(error);
-            console.log(ws);
         }
     }
-
+    useEffect(() => {
+        if (!localToken) {
+            alert('로그인 정보가 없습니다.');
+            nav('/login?로그인+정보가+없습니다.');
+        }
+    }, [localToken]);
     return (
-        <WhiteBoard>
-            <TopBar />
-            <Title title="Chatting" />
-            <TopBack />
-            <UserModal />
+        <CommonLayout title="Chatting">
             <ImExit
                 className="exit"
                 size="25"
@@ -499,15 +477,6 @@ export const Chatting = () => {
                     <FiSend size={15} />
                 </SendButton>
             </ChatBox>
-
-            <AddListModal
-                title="일정 추가하기"
-                open={showReq}
-                close={closeReq}
-                type="add"
-            />
-            <AppBack />
-            <AppBar close={closeReq} />
-        </WhiteBoard>
+        </CommonLayout>
     );
 };

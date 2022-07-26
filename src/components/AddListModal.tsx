@@ -191,7 +191,6 @@ const AddListModal = (props: props) => {
         (data: editPlan) => callUpApi.editPlanApi(data),
         {
             onSuccess: (res) => {
-                console.log(res);
                 setContent('');
                 queryClient.invalidateQueries('planData');
                 close();

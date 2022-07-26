@@ -1,10 +1,10 @@
-import React, { KeyboardEvent, useState } from 'react';
+import React, { KeyboardEvent, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { GoSignIn } from 'react-icons/go';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from 'react-query';
 import { callUpApi } from '../Api/callAPi';
-import { useResetRecoilState, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { AxiosError } from 'axios';
 import { accessTokenState } from '../recoil/store';
 
@@ -102,6 +102,7 @@ export const Login = () => {
     const nav = useNavigate();
     const [emailtext, setEmailText] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+
     const loginData = {
         email: emailtext,
         password: password,
@@ -113,17 +114,17 @@ export const Login = () => {
     };
     const login = useMutation((data: login) => callUpApi.loginApi(data), {
         onSuccess: (res) => {
-            console.log(res);
             loginToken(res.headers.authorization);
-            nav('/');
-            alert(res.data);
+            setTimeout(() => {
+                alert(res.data);
+                nav('/');
+            }, 100);
         },
         onError: (err: AxiosError) => {
             alert('아이디/비밀번호를 확인해 주세요!');
         },
     });
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log();
         setEmailText(e.target.value);
     };
     const onChange2 = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -134,6 +135,13 @@ export const Login = () => {
             loginFunc();
         }
     };
+    const localToken = localStorage.getItem('recoil-persist');
+    useEffect(() => {
+        if (localToken) {
+            alert('이미 로그인 돼있습니다.');
+            nav('/');
+        }
+    }, [localToken]);
     return (
         <WhiteBoard>
             <AppName>JUST DO IT!</AppName>

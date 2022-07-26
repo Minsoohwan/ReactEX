@@ -1,17 +1,10 @@
 import { AxiosError } from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { callUpApi } from '../Api/callAPi';
-import AddListModal from '../components/AddListModal';
-import AppBack from '../components/AppBack';
-import AppBar from '../components/AppBar';
-import Title from '../components/Title';
-import TopBack from '../components/TopBack';
-import TopBar from '../components/TopBar';
-import UserModal from '../components/UserMenu';
-import { WhiteBoard } from './Login';
+import CommonLayout from '../Layout/CommonLayout';
 
 type props = {
     color: string;
@@ -81,15 +74,12 @@ const ChangeButton = styled.button`
 `;
 export const ChangePassWord = () => {
     const nav = useNavigate();
-    const [showReq, setShowReq] = useState<boolean>(false);
     const [oriPassword, setOriPassword] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [passwordCheck, setPasswordCheck] = useState<string>('');
-    const [view, setView] = useState<boolean>(true);
+    const [view] = useState<boolean>(true);
     const [viewCheck, setViewCheck] = useState<boolean>(true);
-    function closeReq() {
-        setShowReq(!showReq);
-    }
+
     const CheckPassword = (asValue: string) => {
         var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{5,10}$/;
         return regExp.test(asValue);
@@ -127,12 +117,15 @@ export const ChangePassWord = () => {
             },
         },
     );
+    const localToken = localStorage.getItem('recoil-persist');
+    useEffect(() => {
+        if (!localToken) {
+            alert('로그인 정보가 없습니다.');
+            nav('/login?로그인+정보가+없습니다.');
+        }
+    }, [localToken]);
     return (
-        <WhiteBoard>
-            <TopBar />
-            <Title title="Change Password" />
-            <TopBack />
-            <UserModal />
+        <CommonLayout title="Change Password">
             <ChangDiv>
                 <InputBox>
                     <SignUpText>Original Password</SignUpText>
@@ -208,14 +201,6 @@ export const ChangePassWord = () => {
                     </ChangeButton>
                 </InputBox>
             </ChangDiv>
-            <AddListModal
-                title="일정 추가하기"
-                open={showReq}
-                close={closeReq}
-                type="add"
-            />
-            <AppBack />
-            <AppBar close={closeReq} />
-        </WhiteBoard>
+        </CommonLayout>
     );
 };

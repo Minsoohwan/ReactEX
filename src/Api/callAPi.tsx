@@ -203,6 +203,11 @@ const editBoardApi = async (data: editboard) => {
     const ebp = await callApi.put(`/board/${data.id}`, data.data);
     return ebp;
 };
+const selectCharaterApi = async (data: { type: string }) => {
+    const sca = await callApi.post('/character/select', data);
+    return sca;
+};
+
 export const callUpApi = {
     getInfoApi: () => getInfoApi(),
     getNewTokenApi: () => getNewTokenApi(),
@@ -238,4 +243,5 @@ export const callUpApi = {
     addBoardApi: (data: board) => addBoardApi(data),
     deleteBoardApi: (id: string) => deleteBoardApi(id),
     editBoardApi: (data: editboard) => editBoardApi(data),
+    selectCharaterApi: (data: { type: string }) => selectCharaterApi(data),
 };

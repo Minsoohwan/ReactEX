@@ -29,7 +29,6 @@ const onRequestError = (error: AxiosError): Promise<AxiosError> => {
         const localToken = localStorage.getItem('recoil-persist');
 
         if (localToken) {
-            console.log('??');
             const toto = JSON.parse(localToken);
             const accessToken = toto.access;
 

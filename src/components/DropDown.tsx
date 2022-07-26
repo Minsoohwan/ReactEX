@@ -61,13 +61,8 @@ const Dropdown = () => {
             setUserData(res.data);
         },
     });
-    const scopePlan = useMutation(
-        (data: { publicScope: string }) => callUpApi.scopePlanApi(data),
-        {
-            onSuccess: (res) => {
-                console.log(res);
-            },
-        },
+    const scopePlan = useMutation((data: { publicScope: string }) =>
+        callUpApi.scopePlanApi(data),
     );
     const queryClient = useQueryClient();
     React.useEffect(() => {

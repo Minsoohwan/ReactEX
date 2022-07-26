@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { AiOutlineNotification } from 'react-icons/ai';
 import { CgProfile } from 'react-icons/cg';
 
 import { GiThreeFriends } from 'react-icons/gi';
@@ -42,9 +41,6 @@ const TopBar = () => {
                         cursor="pointer"
                         onClick={() => nav('/friends')}
                     />
-                </div>
-                <div>
-                    <AiOutlineNotification size={25} cursor="pointer" />
                 </div>
                 <div>
                     <CgProfile

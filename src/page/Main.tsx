@@ -1,4 +1,4 @@
-import React, { KeyboardEvent, useState } from 'react';
+import React, { KeyboardEvent, useEffect, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import {
     BsFillCalendar2CheckFill,
@@ -22,6 +22,8 @@ import '../css/icon.css';
 import AppBack from '../components/AppBack';
 import UserModal from '../components/UserMenu';
 import AskModal from '../components/AskModal';
+import Complete from '../components/Complete';
+import { useNavigate } from 'react-router-dom';
 
 const WhiteBoard = styled.div`
     position: relative;
@@ -76,9 +78,8 @@ const Profileimg = styled.div`
 const ExpState = styled.div`
     position: absolute;
     bottom: 0;
-    left: -5px;
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
 `;
 const ExpPercent = styled.div`
     position: absolute;
@@ -208,13 +209,17 @@ export const Main = () => {
     const [userdata, setUserdata] = useRecoilState(userInfo);
     const [ask, setAsk] = useState<boolean>(false);
     const [showEdit, setShowEdit] = useState<boolean>(false);
-
+    const [showComplete, setShowComplete] = useState<boolean>(false);
+    const nav = useNavigate();
     const queryClient = useQueryClient();
     function closeEdit() {
         setShowEdit(!showEdit);
     }
     function closeAsk() {
         setAsk(!ask);
+    }
+    function closeComplete() {
+        setShowComplete(!showComplete);
     }
     const CheckNickname = (asValue: string) => {
         var regExp = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]{2,15}$/;
@@ -229,7 +234,20 @@ export const Main = () => {
     const nickdata = {
         nick: profileName,
     };
-
+    const selectCharaterFunc = () => {
+        selectCharater.mutate({ type: '나무늘보' });
+    };
+    const selectCharater = useMutation(
+        (data: { type: string }) => callUpApi.selectCharaterApi(data),
+        {
+            onSuccess: (res) => {
+                console.log(res);
+            },
+            onError: (err) => {
+                console.log(err);
+            },
+        },
+    );
     const userData: any = useQuery('userData', callUpApi.getInfoApi, {
         onSuccess: (res: any) => {
             setUserdata(res.data);
@@ -239,9 +257,17 @@ export const Main = () => {
             if (err.message === 'Request failed with status code 401') {
                 window.location.reload();
             }
+            if (err.message === 'Request failed with status code 404') {
+                selectCharaterFunc();
+                window.location.reload();
+                return (
+                    <WhiteBoard>
+                        캐릭터 생성중입니다. 잠시만 기다려주세요.
+                    </WhiteBoard>
+                );
+            }
         },
     });
-    console.log(userdata);
     const nickUpdateApiFunc = () => {
         nickCheck.mutate(nickdata);
     };
@@ -314,6 +340,16 @@ export const Main = () => {
             },
         },
     );
+    useEffect(() => {
+        if (!localToken) {
+            alert('로그인 정보가 없습니다.');
+            nav('/login?로그인+정보가+없습니다.');
+        }
+    }, [localToken]);
+    if (userData.status === 'loading') {
+        return <WhiteBoard>로딩중</WhiteBoard>;
+    }
+
     return (
         <WhiteBoard
             onClick={
@@ -326,166 +362,187 @@ export const Main = () => {
         >
             <TopBar />
             <UserModal />
-            <ExpBack>
-                <label htmlFor="img">
-                    <AiFillCamera size={25} className="camera" />
-                </label>
-                <input
-                    id="img"
-                    type="file"
-                    accept="image/*"
-                    onChange={saveFileImage}
-                    style={{ display: 'none' }}
-                />
-                <Profileimg
-                    color="white"
-                    image={profile ? userdata.profileImageUrl : null}
-                >
-                    {!profile && (
-                        <ExpPercent>
-                            {'Lv : ' + userdata.characterInfo.level}
-                        </ExpPercent>
-                    )}
-                </Profileimg>
-                <ExpState onClick={() => setprofile(!profile)}>
-                    <Donut exp={userdata.characterInfo?.expPercent} />
-                </ExpState>
-            </ExpBack>
-            <ProfileNameArea>
-                {edit ? (
-                    <ProfileName onClick={() => setEdit(false)}>
-                        {userdata.nick}
-                    </ProfileName>
-                ) : (
-                    <ProfileNameEdit
-                        type="text"
-                        value={profileName}
-                        onChange={onChange}
-                        onKeyUp={onKeyPressNickname}
-                        onClick={(e: any) => {
-                            e.stopPropagation();
-                        }}
-                    />
-                )}
-                <ProfileEmail>{localToken && userdata.userId}</ProfileEmail>
-            </ProfileNameArea>
-            <CharactorBox>
-                <Charactor
-                    ani={animation}
-                    src={
-                        userData.status === 'success' &&
-                        userdata.characterInfo.level < 5
-                            ? '/img/알.png'
-                            : userData.status === 'success' &&
-                              userdata.characterInfo.level < 10
-                            ? '/img/금간알.png'
-                            : userData.status === 'success' &&
-                              userdata.characterInfo.level < 15
-                            ? '/img/깨진알.png'
-                            : '/img/병아리.png'
-                    }
-                    // src="/img/알.png"
-                    onClick={() => setAnimation(!animation)}
-                />
-            </CharactorBox>
-            <ListPosition>
-                {userData.status === 'success' &&
-                    userdata.todayTodoList.map(
-                        (
-                            v: {
-                                todoId: number;
-                                todoContent: string;
-                                todoDate: string;
-                                state: boolean;
-                                category: string;
-                                boardId: number;
-                            },
-                            i: number,
-                        ) => {
-                            return (
-                                <List
-                                    key={i}
-                                    onClick={
-                                        !v.state
-                                            ? () => {
-                                                  closeAsk();
-                                                  setListId(v.todoId);
-                                              }
-                                            : () => {}
-                                    }
-                                >
-                                    {v.state ? (
-                                        <BsFillCalendar2CheckFill
-                                            size={15}
-                                            color="green"
-                                            className="planIcon"
-                                        />
-                                    ) : (
-                                        <BsFillCalendarXFill
-                                            size={15}
-                                            color="#d84949"
-                                            className="planIcon"
-                                        />
-                                    )}
-                                    {v.boardId && (
-                                        <BsFillPeopleFill
-                                            size={15}
-                                            className="planIcon"
-                                            color="#14943f"
-                                        />
-                                    )}
-                                    <ListTitle>
-                                        {v.todoContent} {v.todoDate}
-                                    </ListTitle>
-                                    {v.boardId ? null : (
-                                        <IconDiv>
-                                            {!v.state && (
-                                                <FaPencilAlt
-                                                    className="todoIcon"
+            {userData.status === 'success' && (
+                <>
+                    <ExpBack>
+                        <label htmlFor="img">
+                            <AiFillCamera size={25} className="camera" />
+                        </label>
+                        <input
+                            id="img"
+                            type="file"
+                            accept="image/*"
+                            onChange={saveFileImage}
+                            style={{ display: 'none' }}
+                        />
+                        <Profileimg
+                            color="white"
+                            image={profile ? userdata.profileImageUrl : null}
+                        >
+                            {!profile && (
+                                <ExpPercent>
+                                    {'Lv : ' + userdata.characterInfo.level}
+                                </ExpPercent>
+                            )}
+                        </Profileimg>
+                        <ExpState onClick={() => setprofile(!profile)}>
+                            <Donut exp={userdata.characterInfo?.expPercent} />
+                        </ExpState>
+                    </ExpBack>
+                    <ProfileNameArea>
+                        {edit ? (
+                            <ProfileName onClick={() => setEdit(false)}>
+                                {userdata.nick}
+                            </ProfileName>
+                        ) : (
+                            <ProfileNameEdit
+                                type="text"
+                                value={profileName}
+                                onChange={onChange}
+                                onKeyUp={onKeyPressNickname}
+                                onClick={(e: any) => {
+                                    e.stopPropagation();
+                                }}
+                            />
+                        )}
+                        <ProfileEmail>
+                            {localToken && userdata.userId}
+                        </ProfileEmail>
+                    </ProfileNameArea>
+                    <CharactorBox>
+                        <Charactor
+                            ani={animation}
+                            src={
+                                userData.status === 'success' &&
+                                userdata.characterInfo.level < 5
+                                    ? '/img/알.png'
+                                    : userData.status === 'success' &&
+                                      userdata.characterInfo.level < 10
+                                    ? '/img/금간알.png'
+                                    : userData.status === 'success' &&
+                                      userdata.characterInfo.level < 15
+                                    ? '/img/깨진알.png'
+                                    : '/img/병아리.png'
+                            }
+                            onClick={() => setAnimation(!animation)}
+                        />
+                    </CharactorBox>
+                    <ListPosition>
+                        <button onClick={closeComplete}>완료 현황</button>
+
+                        {userData.status === 'success' &&
+                            userdata.todayTodoList.map(
+                                (
+                                    v: {
+                                        todoId: number;
+                                        todoContent: string;
+                                        todoDate: string;
+                                        state: boolean;
+                                        category: string;
+                                        boardId: number;
+                                    },
+                                    i: number,
+                                ) => {
+                                    return (
+                                        <List
+                                            key={i}
+                                            onClick={
+                                                !v.state
+                                                    ? () => {
+                                                          closeAsk();
+                                                          setListId(v.todoId);
+                                                      }
+                                                    : () => {}
+                                            }
+                                        >
+                                            {v.state ? (
+                                                <BsFillCalendar2CheckFill
                                                     size={15}
-                                                    onClick={(e) => {
-                                                        setListId(v.todoId);
-                                                        setContent(
-                                                            v.todoContent,
-                                                        );
-                                                        setListDate(v.todoDate);
-                                                        e.stopPropagation();
-                                                        closeEdit();
-                                                    }}
+                                                    color="green"
+                                                    className="planIcon"
+                                                />
+                                            ) : (
+                                                <BsFillCalendarXFill
+                                                    size={15}
+                                                    color="#d84949"
+                                                    className="planIcon"
                                                 />
                                             )}
-                                            <BsFillTrashFill
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    deletePlanList(v.todoId);
-                                                }}
-                                                className="todoIcon"
-                                                size={15}
-                                            />
-                                        </IconDiv>
-                                    )}
-                                </List>
-                            );
-                        },
-                    )}
-            </ListPosition>
-            <AskModal open={ask} close={closeAsk} id={listId} />
-            <AddListModal
-                title="일정 변경하기"
-                open={showEdit}
-                close={closeEdit}
-                propsContent={content}
-                todoId={listId}
-                listDate={listDate}
-                type="Edit"
-            />
-            <AddListModal
-                title="일정 추가하기"
-                open={showReq}
-                close={closeReq}
-                type="add"
-            />
-            <AppBack />
+                                            {v.boardId && (
+                                                <BsFillPeopleFill
+                                                    size={15}
+                                                    className="planIcon"
+                                                    color="#14943f"
+                                                />
+                                            )}
+                                            <ListTitle>
+                                                {v.todoContent} {v.todoDate}
+                                            </ListTitle>
+                                            {v.boardId ? null : (
+                                                <IconDiv>
+                                                    {!v.state && (
+                                                        <FaPencilAlt
+                                                            className="todoIcon"
+                                                            size={15}
+                                                            onClick={(e) => {
+                                                                setListId(
+                                                                    v.todoId,
+                                                                );
+                                                                setContent(
+                                                                    v.todoContent,
+                                                                );
+                                                                setListDate(
+                                                                    v.todoDate,
+                                                                );
+                                                                e.stopPropagation();
+                                                                closeEdit();
+                                                            }}
+                                                        />
+                                                    )}
+                                                    <BsFillTrashFill
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            deletePlanList(
+                                                                v.todoId,
+                                                            );
+                                                        }}
+                                                        className="todoIcon"
+                                                        size={15}
+                                                    />
+                                                </IconDiv>
+                                            )}
+                                        </List>
+                                    );
+                                },
+                            )}
+                    </ListPosition>
+                    <Complete
+                        open={showComplete}
+                        close={closeComplete}
+                        exercise={userdata.characterInfo.exercise}
+                        study={userdata.characterInfo.study}
+                        plan={userdata.characterInfo.promise}
+                        shopping={userdata.characterInfo.shopping}
+                    />
+                    <AskModal open={ask} close={closeAsk} id={listId} />
+                    <AddListModal
+                        title="일정 변경하기"
+                        open={showEdit}
+                        close={closeEdit}
+                        propsContent={content}
+                        todoId={listId}
+                        listDate={listDate}
+                        type="Edit"
+                    />
+                    <AddListModal
+                        title="일정 추가하기"
+                        open={showReq}
+                        close={closeReq}
+                        type="add"
+                    />
+                    <AppBack />
+                </>
+            )}
             <AppBar close={closeReq} />
         </WhiteBoard>
     );

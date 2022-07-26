@@ -67,10 +67,7 @@ export const chattingStore = atom({
     key: 'chattingStore',
     default: [] as any[],
 });
-export const planStore = atom({
-    key: 'planStore',
-    default: [] as any[],
-});
+
 export const searchingStore = atom({
     key: 'searchingStore',
     default: 'title' as string,

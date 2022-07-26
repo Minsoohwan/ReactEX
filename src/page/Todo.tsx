@@ -1,6 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 import {
     BsFillCalendarXFill,
     BsFillCalendar2CheckFill,
@@ -8,48 +7,22 @@ import {
     BsFillPeopleFill,
 } from 'react-icons/bs';
 import { FaPencilAlt } from 'react-icons/fa';
-import TopBar from '../components/TopBar';
-import Title from '../components/Title';
 import Dropdown from '../components/DropDown';
 import '../css/icon.css';
-import AppBar from '../components/AppBar';
 import AddListModal from '../components/AddListModal';
-import TopBack from '../components/TopBack';
-import AppBack from '../components/AppBack';
-import UserModal from '../components/UserMenu';
 import { useInfiniteQuery, useMutation, useQueryClient } from 'react-query';
-import axios, { Axios, AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
 import setupInterceptorsTo from '../Api/Interceptors';
 import { useInView } from 'react-intersection-observer';
 import { callUpApi } from '../Api/callAPi';
 import AskModal from '../components/AskModal';
+import CommonLayout from '../Layout/CommonLayout';
+import { useNavigate } from 'react-router-dom';
 
 type props = {
     color: string;
 };
 
-const WhiteBoard = styled.div`
-    position: relative;
-    max-width: 768px;
-    width: 100%;
-    min-width: 375px;
-    min-height: 667px;
-    height: 100vh;
-    margin: auto;
-    display: flex;
-    padding: 10px;
-    overflow: auto;
-    flex-direction: column;
-    /* align-items: center; */
-    border: 1px solid;
-    background-image: linear-gradient(
-            rgba(255, 255, 255, 0.8),
-            rgba(255, 255, 255, 0.8)
-        ),
-        url('/background.png');
-    background-size: auto;
-    background-position: -60px 15px;
-`;
 export const List = styled.div`
     width: 100%;
     border-radius: 10px;
@@ -119,17 +92,14 @@ const ListDiv = styled.div`
 
 export const Todo = () => {
     const [filter, setFilter] = useState<string>('all');
-    const [showReq, setShowReq] = useState<boolean>(false);
     const [showEdit, setShowEdit] = useState<boolean>(false);
     const [listId, setListId] = useState<number>(0);
     const [content, setContent] = useState<string>('');
     const [listDate, setListDate] = useState<string>('');
     const [ask, setAsk] = useState<boolean>(false);
+    const nav = useNavigate();
     const [ref, isView] = useInView();
 
-    function closeReq() {
-        setShowReq(!showReq);
-    }
     function closeEdit() {
         setShowEdit(!showEdit);
     }
@@ -186,7 +156,13 @@ export const Todo = () => {
             },
         },
     );
-
+    const localToken = localStorage.getItem('recoil-persist');
+    useEffect(() => {
+        if (!localToken) {
+            alert('로그인 정보가 없습니다.');
+            nav('/login?로그인+정보가+없습니다.');
+        }
+    }, [localToken]);
     useEffect(() => {
         // 맨 마지막 요소를 보고있고 더이상 페이지가 존재하면
         // 다음 페이지 데이터를 가져옴
@@ -199,11 +175,7 @@ export const Todo = () => {
     }, [filter]);
 
     return (
-        <WhiteBoard>
-            <TopBar />
-            <Title title="Planner" />
-            <TopBack />
-            <UserModal />
+        <CommonLayout title="Planner">
             <TextDiv>
                 <PlanText
                     color={filter === 'all' ? 'black' : '#949494'}
@@ -400,14 +372,6 @@ export const Todo = () => {
                 listDate={listDate}
                 type="Edit"
             />
-            <AddListModal
-                title="일정 추가하기"
-                open={showReq}
-                close={closeReq}
-                type="add"
-            />
-            <AppBack />
-            <AppBar close={closeReq} />
-        </WhiteBoard>
+        </CommonLayout>
     );
 };

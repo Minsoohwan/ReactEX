@@ -5,7 +5,6 @@ import {
     Main,
     SignUP,
     Todo,
-    Social,
     Community,
     CommunityDetail,
     Chat,
@@ -43,11 +42,7 @@ export const List: Route[] = [
         path: '/todo',
         page: Todo,
     },
-    {
-        id: 'social',
-        path: '/social',
-        page: Social,
-    },
+
     {
         id: 'Community',
         path: '/community',

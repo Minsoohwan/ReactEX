@@ -1,45 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import AddListModal from '../components/AddListModal';
-import AppBar from '../components/AppBar';
 import SearchingDropDown from '../components/SearchingDropDown';
-import Title from '../components/Title';
-import TopBar from '../components/TopBar';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { MdEmojiPeople } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
-import TopBack from '../components/TopBack';
-import AppBack from '../components/AppBack';
 import { BsPlusSquare } from 'react-icons/bs';
-import UserModal from '../components/UserMenu';
 import setupInterceptorsTo from '../Api/Interceptors';
 import axios from 'axios';
-import { useInfiniteQuery, useQueryClient } from 'react-query';
+import { useInfiniteQuery } from 'react-query';
 import { useInView } from 'react-intersection-observer';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { searchingStore, viewData } from '../recoil/store';
-import { stringify } from 'querystring';
-
-const WhiteBoard = styled.div`
-    position: relative;
-    max-width: 768px;
-    width: 100%;
-    min-height: 667px;
-    height: 100vh;
-    margin: auto;
-    display: flex;
-    padding: 10px;
-    overflow: auto;
-    flex-direction: column;
-    border: 1px solid;
-    background-image: linear-gradient(
-            rgba(255, 255, 255, 0.8),
-            rgba(255, 255, 255, 0.8)
-        ),
-        url('/background.png');
-    background-size: auto;
-    background-position: -60px 15px;
-`;
+import CommonLayout from '../Layout/CommonLayout';
 
 const SearchingDiv = styled.div`
     position: relative;
@@ -269,7 +241,6 @@ export const createDateTime = (date: string) => {
     }
 };
 export const Community = () => {
-    const [showReq, setShowReq] = useState<boolean>(false);
     const [select, setSelect] = useRecoilState(viewData);
     const [searchValue, setSearchValue] = useState<{
         value: string;
@@ -279,9 +250,6 @@ export const Community = () => {
     const [ref, isView] = useInView();
     const nav = useNavigate();
 
-    function closeReq() {
-        setShowReq(!showReq);
-    }
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchValue({ ...searchValue, value: e.target.value });
     };
@@ -343,13 +311,15 @@ export const Community = () => {
     useEffect(() => {
         refetch();
     }, [searchValue.state]);
+    const localToken = localStorage.getItem('recoil-persist');
+    useEffect(() => {
+        if (!localToken) {
+            alert('로그인 정보가 없습니다.');
+            nav('/login?로그인+정보가+없습니다.');
+        }
+    }, [localToken]);
     return (
-        <WhiteBoard>
-            <TopBar />
-            <Title title="Community" />
-            <TopBack />
-            <UserModal />
-
+        <CommonLayout title="Community">
             <SearchingDiv>
                 <SearchingDropDown />
                 <SearchingInputPosition>
@@ -577,14 +547,6 @@ export const Community = () => {
                       })
                     : ''}
             </ContentOutLine>
-            <AddListModal
-                title="일정 추가하기"
-                open={showReq}
-                close={closeReq}
-                type="add"
-            />
-            <AppBack />
-            <AppBar close={closeReq} />
-        </WhiteBoard>
+        </CommonLayout>
     );
 };

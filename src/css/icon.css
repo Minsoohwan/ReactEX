@@ -36,6 +36,15 @@
     right: 10px;
     cursor: pointer;
 }
+.refreshFriends {
+    position: absolute;
+    top: 102px;
+    right: 50px;
+    cursor: pointer;
+}
+.refreshFriends:hover {
+    color: gray;
+}
 .addFriends:hover {
     color: gray;
 }

@@ -2,7 +2,6 @@ export * from './Login';
 export * from './SignUp';
 export * from './Todo';
 export * from './Main';
-export * from './Social';
 export * from './Community';
 export * from './CoummunityDetail';
 export * from './Chat';

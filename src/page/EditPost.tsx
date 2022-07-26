@@ -1,26 +1,20 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import AddListModal from '../components/AddListModal';
-import AppBack from '../components/AppBack';
-import AppBar from '../components/AppBar';
-import Title from '../components/Title';
-import TopBack from '../components/TopBack';
-import TopBar from '../components/TopBar';
 import {
     ContentProfile,
     ContentProfileImg,
     ContentProfileName,
 } from './Community';
-import { WhiteBoard } from './Login';
 import { AiFillCamera } from 'react-icons/ai';
 import { BsFillTrashFill } from 'react-icons/bs';
-import UserModal from '../components/UserMenu';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { boardStore, shareData, userInfo } from '../recoil/store';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { callUpApi, editboard } from '../Api/callAPi';
 import { TodoInform } from './CoummunityDetail';
 import { useNavigate, useParams } from 'react-router-dom';
+import CommonLayout from '../Layout/CommonLayout';
 
 type props = {
     img?: string;
@@ -197,8 +191,6 @@ const PostButton = styled.button`
 `;
 export const EditPost = () => {
     const boardData = useRecoilValue(boardStore);
-    console.log(boardData);
-    const [showReq, setShowReq] = useState<boolean>(false);
     const [showShare, setShowShare] = useState<boolean>(false);
     const [viewImg, setViewImg] = useState<string>(boardData.imageUrl);
     const [display, setDisplay] = useState<boolean>(true);
@@ -218,9 +210,7 @@ export const EditPost = () => {
             setUserdata(res.data);
         },
     });
-    function closeReq() {
-        setShowReq(!showReq);
-    }
+
     function closeShare() {
         setShowShare(!showShare);
     }
@@ -292,12 +282,15 @@ export const EditPost = () => {
             });
         }
     }, [boardData]);
+    const localToken = localStorage.getItem('recoil-persist');
+    useEffect(() => {
+        if (!localToken) {
+            alert('로그인 정보가 없습니다.');
+            nav('/login?로그인+정보가+없습니다.');
+        }
+    }, [localToken]);
     return (
-        <WhiteBoard>
-            <TopBar />
-            <Title title="Edit" />
-            <TopBack />
-            <UserModal />
+        <CommonLayout title="Edit">
             <PostOutLine>
                 <TextDiv>
                     <PlanText
@@ -411,16 +404,6 @@ export const EditPost = () => {
                 close={closeShare}
                 type="share"
             />
-
-            <AppBack />
-            <AddListModal
-                title="일정 추가하기"
-                open={showReq}
-                close={closeReq}
-                type="add"
-            />
-            <AppBack />
-            <AppBar close={closeReq} />
-        </WhiteBoard>
+        </CommonLayout>
     );
 };

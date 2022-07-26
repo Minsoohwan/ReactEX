@@ -1,19 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
-import AddListModal from '../components/AddListModal';
-import AppBar from '../components/AppBar';
-import Title from '../components/Title';
-import TopBar from '../components/TopBar';
 import { MdEmojiPeople } from 'react-icons/md';
-import { BsThreeDots } from 'react-icons/bs';
-import { BsShareFill } from 'react-icons/bs';
-import { BsPencilFill } from 'react-icons/bs';
-import { BsTrashFill } from 'react-icons/bs';
-import ChatJoin from '../components/ChatJoin';
+import { BsThreeDots, BsPencilFill, BsTrashFill } from 'react-icons/bs';
 import { useNavigate, useParams } from 'react-router-dom';
-import TopBack from '../components/TopBack';
-import AppBack from '../components/AppBack';
-import UserModal from '../components/UserMenu';
 import axios, { AxiosError } from 'axios';
 import setupInterceptorsTo from '../Api/Interceptors';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
@@ -21,27 +10,8 @@ import { ContentProfileImg, createDateTime, DateDiv } from './Community';
 import { callUpApi } from '../Api/callAPi';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { boardStore, userInfo } from '../recoil/store';
+import CommonLayout from '../Layout/CommonLayout';
 
-const WhiteBoard = styled.div`
-    position: relative;
-    max-width: 768px;
-    width: 100%;
-    min-height: 667px;
-    height: 100vh;
-    margin: auto;
-    display: flex;
-    padding: 10px;
-    overflow: auto;
-    flex-direction: column;
-    border: 1px solid;
-    background-image: linear-gradient(
-            rgba(255, 255, 255, 0.8),
-            rgba(255, 255, 255, 0.8)
-        ),
-        url('/background.png');
-    background-size: auto;
-    background-position: -60px 15px;
-`;
 const Menu = keyframes`
     0%{
         transform: translateY(-10%);
@@ -207,7 +177,6 @@ export const TodoInform = styled.div`
 `;
 
 export const CommunityDetail = () => {
-    const [showReq, setShowReq] = useState<boolean>(false);
     const [menu, setMenu] = useState<boolean>(false);
     const [join, setjoin] = useState<boolean>(false);
     const setBoardData = useSetRecoilState(boardStore);
@@ -216,16 +185,17 @@ export const CommunityDetail = () => {
     const boardId = param.id;
     const queryClient = useQueryClient();
     const nav = useNavigate();
-    function closeReq() {
-        setShowReq(!showReq);
-    }
+
     const chatQuery: any = useQuery('chatList', callUpApi.getChatListApi, {});
     function checkChatRoom(data: string) {
+        const roomId = [];
         for (let i = 0; i < chatQuery.data.data.length; i++) {
-            if (chatQuery.data.data[i].roomId === data) {
-                return true;
-            }
+            roomId.push(chatQuery.data.data[i].roomId);
+        }
+        if (roomId.includes(data)) {
             return false;
+        } else {
+            return true;
         }
     }
     const baseApi = axios.create({
@@ -294,13 +264,8 @@ export const CommunityDetail = () => {
         deleteChat.mutate(data);
     };
 
-    const deleteChat = useMutation(
-        (data: { roomId: string }) => callUpApi.deleteChatApi(data),
-        {
-            onSuccess: (res) => {
-                console.log(res);
-            },
-        },
+    const deleteChat = useMutation((data: { roomId: string }) =>
+        callUpApi.deleteChatApi(data),
     );
     const deleteBoardPost = () => {
         if (boardId) {
@@ -321,14 +286,19 @@ export const CommunityDetail = () => {
             },
         },
     );
+    const localToken = localStorage.getItem('recoil-persist');
+    useEffect(() => {
+        if (!localToken) {
+            alert('로그인 정보가 없습니다.');
+            nav('/login?로그인+정보가+없습니다.');
+        }
+    }, [localToken]);
     return (
-        <WhiteBoard onClick={menu ? () => setMenu(false) : () => {}}>
-            <TopBar />
-            <Title title="Community" />
-            <TopBack />
-            <UserModal />
+        <CommonLayout title="Community">
             {boardDetail.status === 'success' && (
-                <ContentOutLine>
+                <ContentOutLine
+                    onClick={menu ? () => setMenu(false) : () => {}}
+                >
                     <ContentDiv>
                         <ContentProfile>
                             <ContentProfileImg
@@ -380,28 +350,34 @@ export const CommunityDetail = () => {
                                     </DateDiv>
                                 </div>
                             )}
-
-                            <BsThreeDots
-                                size="25"
-                                cursor={'pointer'}
-                                onClick={() => setMenu(!menu)}
-                            />
+                            {userdata.nick ===
+                                boardDetail.data.data.authorNick && (
+                                <BsThreeDots
+                                    size="25"
+                                    cursor={'pointer'}
+                                    onClick={() => setMenu(!menu)}
+                                />
+                            )}
                             {menu &&
                             userdata.nick ===
-                                boardDetail.data.data.authorNick &&
-                            boardDetail.data.data.category !== 'CHALLENGE' ? (
+                                boardDetail.data.data.authorNick ? (
                                 <CommunityMenu>
-                                    <MenuContent borderTop="" borderBottom="">
-                                        링크
-                                        <BsShareFill />
-                                    </MenuContent>
                                     <MenuContent
-                                        borderTop="1px solid #58585857"
+                                        borderTop=""
                                         borderBottom="1px solid #58585857"
-                                        onClick={() =>
-                                            nav(
-                                                `/edit/${boardDetail.data.data.boardId}`,
-                                            )
+                                        onClick={
+                                            boardDetail.data.data.category !==
+                                            'CHALLENGE'
+                                                ? () => {
+                                                      nav(
+                                                          `/edit/${boardDetail.data.data.boardId}`,
+                                                      );
+                                                  }
+                                                : () => {
+                                                      alert(
+                                                          '첼린지는 수정할 수 없습니다.',
+                                                      );
+                                                  }
                                         }
                                     >
                                         수정
@@ -419,17 +395,7 @@ export const CommunityDetail = () => {
                                     </MenuContent>
                                 </CommunityMenu>
                             ) : (
-                                menu && (
-                                    <CommunityMenu>
-                                        <MenuContent
-                                            borderTop=""
-                                            borderBottom=""
-                                        >
-                                            링크
-                                            <BsShareFill />
-                                        </MenuContent>
-                                    </CommunityMenu>
-                                )
+                                menu && <CommunityMenu></CommunityMenu>
                             )}
                         </ContentProfile>
                         <ContentImg src={boardDetail.data.data.imageUrl} />
@@ -462,11 +428,12 @@ export const CommunityDetail = () => {
                                 </div>
                             </TodoInform>
                         )}
-
-                        <Count>
-                            <MdEmojiPeople size={20} />
-                            {boardDetail.data.data.participatingCount}
-                        </Count>
+                        {boardDetail.data.data.category === 'CHALLENGE' && (
+                            <Count>
+                                <MdEmojiPeople size={20} />
+                                {boardDetail.data.data.participatingCount}
+                            </Count>
+                        )}
                     </ContentDiv>
                     {boardDetail.data.data.category === 'CHALLENGE' && (
                         <JoinButton
@@ -508,11 +475,10 @@ export const CommunityDetail = () => {
                             color="#272626"
                             onClick={
                                 chatQuery.status === 'success' &&
-                                checkChatRoom(boardDetail.data.data.chatRoomId)
+                                checkChatRoom(
+                                    boardDetail.data.data.chatRoomId,
+                                ) === true
                                     ? () => {
-                                          alert('이미 침여중인 채팅입니다.');
-                                      }
-                                    : () => {
                                           enterChat({
                                               roomId: boardDetail.data.data
                                                   .chatRoomId,
@@ -521,6 +487,14 @@ export const CommunityDetail = () => {
                                               `/chat/${boardDetail.data.data.chatRoomId}`,
                                           );
                                       }
+                                    : chatQuery.status === 'success' &&
+                                      checkChatRoom(
+                                          boardDetail.data.data.chatRoomId,
+                                      ) === false
+                                    ? () => {
+                                          alert('이미 침여중인 채팅입니다.');
+                                      }
+                                    : () => {}
                             }
                         >
                             채팅 참여하기
@@ -528,15 +502,6 @@ export const CommunityDetail = () => {
                     )}
                 </ContentOutLine>
             )}
-
-            <AddListModal
-                title="일정 추가하기"
-                open={showReq}
-                close={closeReq}
-                type="add"
-            />
-            <AppBack />
-            <AppBar close={closeReq} />
-        </WhiteBoard>
+        </CommonLayout>
     );
 };

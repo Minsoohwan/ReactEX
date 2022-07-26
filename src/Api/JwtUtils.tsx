@@ -26,7 +26,6 @@ export class jwtUtils {
     }
     static getNick(token: string) {
         const decoded: TokenList = jwtDecode(token);
-        console.log(decoded);
         return decoded.nick;
     }
 }
