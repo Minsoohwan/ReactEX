@@ -92,8 +92,10 @@ Promise 기반 client로 주로 API통신을 위하여 사용했습니다.
     
   문제점 : 불피요한 통신과 refetch가 많아저 성능 저하가 예상됨.
   해결방법2 : select state값이 바뀔 때 useEffect를 통해 refetch하게 함.
+    
     useEffect(() => {
         refetch();
     }, [select]);
+    
    결과적으로 원하는 filter를 선택했을 때 refetch가 한 번만 일어나게 수정됨.
   </details>
