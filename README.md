@@ -114,27 +114,27 @@ Promise 기반 client로 주로 API통신을 위하여 사용했습니다.
   .react-datepicker {
     border-radius: 20px !important;
     font-size: 0.9rem !important;
-}
-.react-datepicker__current-month {
-    font-size: 1.2rem !important;
-}
-.react-datepicker__header {
-    border-top-left-radius: 20px !important;
-    border-top-right-radius: 20px !important;
-    padding-top: 18px !important;
-}
-.react-datepicker__navigation {
-    top: 13px !important;
-}
-.react-datepicker__day-name,
-.react-datepicker__day {
-    margin: 0.1rem 0.3rem !important;
-}
+  }
+  .react-datepicker__current-month {
+      font-size: 1.2rem !important;
+  }
+  .react-datepicker__header {
+      border-top-left-radius: 20px !important;
+      border-top-right-radius: 20px !important;
+      padding-top: 18px !important;
+  }
+  .react-datepicker__navigation {
+      top: 13px !important;
+  }
+  .react-datepicker__day-name,
+  .react-datepicker__day {
+      margin: 0.1rem 0.3rem !important;
+  }
 
-.react-datepicker__day--disabled {
-    color: #cccccc !important;
-}
-  
+  .react-datepicker__day--disabled {
+      color: #cccccc !important;
+  }
+</details>  
  <details><summary>공통 Layout</summary>
   
   문제 : 로그인, 회원가입, 메인, 친구의 메인 4개의 페이지를 제외한 모든 페이지에서 공통된 component들을 페이지마다 각각 사용하고 있어 비효율적인 코딩을 하게됨.
