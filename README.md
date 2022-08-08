@@ -101,32 +101,33 @@ Promise 기반 client로 주로 API통신을 위하여 사용했습니다.
    결과적으로 원하는 filter를 선택했을 때 refetch가 한 번만 일어나게 수정됨.
   </details>
   
- <details><summary>공통 Layot</summary>    
+ <details><summary>공통 Layot</summary>
+  
     문제 : 로그인, 회원가입, 메인, 친구의 메인 4개의 페이지를 제외한 모든 페이지에서 공통된 component들을 페이지마다 각각 사용하고 있어 비효율적인 코딩을 하게됨.
   
     해결 : CommonLayout component를 만들어 공통된 component를 이용해 layout을 만들고 props의 children 속성을 사용해 페이지를 layout 사이에 위치시켜 해결.
   
-  const CommonLayout = ({children, titl}: {children: any;title: string;}) => {
-    const [showReq, setShowReq] = useState<boolean>(false);
+    const CommonLayout = ({children, titl}: {children: any;title: string;}) => {
+      const [showReq, setShowReq] = useState<boolean>(false);
 
-    function closeReq() {
-        setShowReq(!showReq);
-    }
-    return (
-        <WhiteBoard>
-            <TopBar />
-            <Title title={title} />
-            <TopBack />
-            <UserModal />
-            {children}
-            <AddListModal
-                title="일정 추가하기"
-                open={showReq}
-                close={closeReq}
-                type="add"
-            />
-            <AppBack />
-            <AppBar close={closeReq} />
-        </WhiteBoard>
-    );
-};
+      function closeReq() {
+          setShowReq(!showReq);
+      }
+      return (
+          <WhiteBoard>
+              <TopBar />
+              <Title title={title} />
+              <TopBack />
+              <UserModal />
+              {children}
+              <AddListModal
+                  title="일정 추가하기"
+                  open={showReq}
+                  close={closeReq}
+                  type="add"
+              />
+              <AppBack />
+              <AppBar close={closeReq} />
+          </WhiteBoard>
+      );
+  };
