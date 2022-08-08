@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# JUST DO IT 소개
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+수립한 계획들을 수행하면 성장하는 캐릭터를 통해 보다 즐거운 계획 수립과 이행을 도와줍니다.
 
 ## Available Scripts
 
