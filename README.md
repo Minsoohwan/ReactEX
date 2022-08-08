@@ -53,7 +53,7 @@ Promise 기반 client로 주로 API통신을 위하여 사용했습니다.
 <details><summary><b>친구</b></summary><br/> 
   <img src = "https://user-images.githubusercontent.com/105181833/183505671-d0ccfc71-64c3-4c45-afb9-329922970999.png"/>  <img src = "https://user-images.githubusercontent.com/105181833/183505771-4123e8b8-7ebb-4ced-afc0-2854a5caacc4.png"/></details>
 
-
+## <b>JUST DO IT PREVIEW</b>
 ##이슈 및 Trouble Shooting
   <details><summary>게시물 filter</summary>
   문제 : 게시판에서 게시물을 filter할 때 query data로 넘겨주는 filter값이 바뀌지 않는 문제가 발생함.
