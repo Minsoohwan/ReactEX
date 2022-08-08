@@ -58,7 +58,7 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 ## Learn More
 
 <details>
-<summary><b>➡️ 주요 기능</b></summary> 
+<summary><b>JUST DO IT PREVIEW</b></summary> 
   ><b>메인</b><br/>
   <img src = "https://user-images.githubusercontent.com/105181833/183503317-54c235dd-2380-47ce-9a97-1f9fb6331ec6.png"/>
   <img src = "https://user-images.githubusercontent.com/105181833/183505897-6c62ea54-fd2f-4cd0-9567-ed0a4dcede83.png"/>
