@@ -125,7 +125,6 @@ export const Friends = () => {
             onSuccess: (res) => setrequestFriendsList(res.data),
         },
     );
-    console.log(requestFriendQuery);
 
     const deleteFriendsList = (data: { nick: string }) => {
         deleteFriends.mutate(data);
