@@ -38,7 +38,7 @@ Promise 기반 client로 주로 API통신을 위하여 사용했습니다.
 실시간 채팅을 위하여 사용했습니다.
 
 ## <b>JUST DO IT PREVIEW</b>
-<details> <summary>><b>메인</b></summary><br/>
+<details> <summary><b>메인</b></summary><br/>
   
   <img src = "https://user-images.githubusercontent.com/105181833/183503317-54c235dd-2380-47ce-9a97-1f9fb6331ec6.png"/>
   <img src = "https://user-images.githubusercontent.com/105181833/183505897-6c62ea54-fd2f-4cd0-9567-ed0a4dcede83.png"/>
@@ -100,8 +100,42 @@ Promise 기반 client로 주로 API통신을 위하여 사용했습니다.
     
    결과적으로 원하는 filter를 선택했을 때 refetch가 한 번만 일어나게 수정됨.
   </details>
+ <details><summary>Library CSS</summary>
   
- <details><summary>공통 Layot</summary>
+  문제 : react-datepicker library를 원하는대로 수정할 수가 없어 원하는 디자인이 나오지 않게됨.
+  
+  접근 : react-datepicker에 해당하는 node_modules경로로 들어가 직접 css를 수정하면 될 것이라고 생각.
+  
+  시도 : node_modules경로에서 직접 css를 수정해 봤지만 반영이 되지 않음.
+  
+  해결방법 : 개발자도구에서 요소 선택으로 해당 요소를 선택한 뒤 class를 찾고 css파일을 만들어 !important로 내가 지정한 style로 덮어씌움.
+  <img src = "(https://user-images.githubusercontent.com/105181833/183516218-a0b0457c-6712-4849-be38-6ea6413847fd.png"/>
+  
+  .react-datepicker {
+    border-radius: 20px !important;
+    font-size: 0.9rem !important;
+}
+.react-datepicker__current-month {
+    font-size: 1.2rem !important;
+}
+.react-datepicker__header {
+    border-top-left-radius: 20px !important;
+    border-top-right-radius: 20px !important;
+    padding-top: 18px !important;
+}
+.react-datepicker__navigation {
+    top: 13px !important;
+}
+.react-datepicker__day-name,
+.react-datepicker__day {
+    margin: 0.1rem 0.3rem !important;
+}
+
+.react-datepicker__day--disabled {
+    color: #cccccc !important;
+}
+  
+ <details><summary>공통 Layout</summary>
   
   문제 : 로그인, 회원가입, 메인, 친구의 메인 4개의 페이지를 제외한 모든 페이지에서 공통된 component들을 페이지마다 각각 사용하고 있어 비효율적인 코딩을 하게됨.
 
@@ -131,3 +165,4 @@ Promise 기반 client로 주로 API통신을 위하여 사용했습니다.
           </WhiteBoard>
       );
   };
+  </details>
