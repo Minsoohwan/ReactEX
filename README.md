@@ -110,30 +110,8 @@ Promise 기반 client로 주로 API통신을 위하여 사용했습니다.
   
   해결방법 : 개발자도구에서 요소 선택으로 해당 요소를 선택한 뒤 class를 찾고 css파일을 만들어 !important로 내가 지정한 style로 덮어씌움.
   <img src = "(https://user-images.githubusercontent.com/105181833/183516218-a0b0457c-6712-4849-be38-6ea6413847fd.png"/>
+  <img src = "https://user-images.githubusercontent.com/105181833/183516491-065bff95-4591-4e73-9126-14c1949530e7.png"/>
   
-  .react-datepicker {
-    border-radius: 20px !important;
-    font-size: 0.9rem !important;
-  }
-  .react-datepicker__current-month {
-      font-size: 1.2rem !important;
-  }
-  .react-datepicker__header {
-      border-top-left-radius: 20px !important;
-      border-top-right-radius: 20px !important;
-      padding-top: 18px !important;
-  }
-  .react-datepicker__navigation {
-      top: 13px !important;
-  }
-  .react-datepicker__day-name,
-  .react-datepicker__day {
-      margin: 0.1rem 0.3rem !important;
-  }
-
-  .react-datepicker__day--disabled {
-      color: #cccccc !important;
-  }
 </details>  
  <details><summary>공통 Layout</summary>
   
