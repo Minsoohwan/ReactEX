@@ -14,7 +14,6 @@
 <br>
   <img src="https://img.shields.io/badge/Axios-39477F?style=for-the-badge&logo=Axios&logoColor=white">
  <img src="https://img.shields.io/badge/Stomp & Sock.Js-0ABF53?style=for-the-badge&logo=Stomp & Sock.Js&logoColor=white">
-<img src="https://img.shields.io/badge/SSE-FFB71B?style=for-the-badge&logo=SSE&logoColor=ffffff">
  <br> <br/>
    <img src="https://img.shields.io/badge/GitHub%20Actions-232F3E?style=for-the-badge&logo=GitHubActions&logoColor=2088FF"/>
   <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white">
@@ -22,7 +21,7 @@
  <img src="https://img.shields.io/badge/Amazon AWS-232F3E?style=for-the-badge&logo=Amazon AWS&logoColor=white">
  <img src="https://img.shields.io/badge/Amazon S3-569A31?style=for-the-badge&logo=Amazon S3&logoColor=white">
 
-### `yarn start`
+### `TypeScript`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -30,12 +29,12 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
-### `yarn test`
+### `React`
 
 Launches the test runner in the interactive watch mode.\
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `yarn build`
+### `Axios`
 
 Builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
@@ -45,7 +44,7 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `yarn eject`
+### `Stomp & Sock.Js`
 
 **Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
@@ -55,10 +54,10 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
+## <details> <summary><b>JUST DO IT PREVIEW</b></summary> 
 
-<details>
-<summary><b>JUST DO IT PREVIEW</b></summary> 
+
+
   ><b>메인</b><br/>
   <img src = "https://user-images.githubusercontent.com/105181833/183503317-54c235dd-2380-47ce-9a97-1f9fb6331ec6.png"/>
   <img src = "https://user-images.githubusercontent.com/105181833/183505897-6c62ea54-fd2f-4cd0-9567-ed0a4dcede83.png"/>
