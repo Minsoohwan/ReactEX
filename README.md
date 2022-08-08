@@ -57,6 +57,13 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 
 ## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+<details>
+<summary><b>➡️ 브라우저 호환성</b></summary> 
+  
+> **문제** : 타 브라우저는 정상 작동하나 네이버 앱과 삼성 기본 브라우저에서 메인페이지의 경험치 바가 마운트되지 않음. <br/><br/>
+> **원인** : 차트 JS의 그라데이션 캔버스 함수가 원인이었음. <br/><br/>
+  > **접근** : 안드로이드에서 로컬 환경테스트를 함. navigator.userAgent 로 브라우저 종류 구별정보를 파악함. <br/><br/>
+> **결론** : 문제 브라우저에서 경험치바가 그라데이션이 없는 1가지 색으로 보이게 할 계획이었으나, 디자이너님의 요청으로 타 브라우저 사용 유도함.<br/>
+[자세히보러가기](https://github.com/HanghaeE5/Front-end/wiki/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%95%A4%EB%93%9C-%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85---%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%ED%98%B8%ED%99%98)
+<br/>
+</details>
