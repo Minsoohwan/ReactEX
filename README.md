@@ -58,6 +58,7 @@ Promise 기반 client로 주로 API통신을 위하여 사용했습니다.
  ##이슈 및 Trouble Shooting
   <details><summary>게시물 filter</summary>
   문제 : 게시판에서 게시물을 filter할 때 query data로 넘겨주는 filter값이 바뀌지 않는 문제가 발생함.
+    
     const getBoard = async ({ pageParam = 0 }) => {
         const res = await callApi.get(
             `/board?size=10&page=${pageParam}&filter=${select}&sub=${search}&keyword=${searchValue.value}`,
@@ -69,8 +70,10 @@ Promise 기반 client로 주로 API통신을 위하여 사용했습니다.
             isLast: res.data.totalPages,
         };
     };
+    
   접근 : 기존의 queryClient.invalidateQueries()는 data만 다시 캐싱하기 때문에 api통신을 다시 하지 않는다고 생각함.
   해결방법1 : queryClient.invalidateQueries()를 지우고 refetchInterval을 useInfiniteQuery의 onSuccess 콜백 함수에 추가해 주기적으로 refetch하게 함.
+    
      const { data, fetchNextPage, isSuccess, hasNextPage} =
         useInfiniteQuery(
             'boardData',
@@ -86,6 +89,7 @@ Promise 기반 client로 주로 API통신을 위하여 사용했습니다.
                 refetchInterval: 1000,
             },
         );
+    
   문제점 : 불피요한 통신과 refetch가 많아저 성능 저하가 예상됨.
   해결방법2 : select state값이 바뀔 때 useEffect를 통해 refetch하게 함.
     useEffect(() => {
