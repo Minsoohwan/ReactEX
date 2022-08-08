@@ -51,10 +51,9 @@ Promise 기반 client로 주로 API통신을 위하여 사용했습니다.
 <details><summary><b>채팅</b></summary><br/>  
   <img src = "https://user-images.githubusercontent.com/105181833/183505269-eaaf3487-55a7-4a0f-88e3-38c9a3b8f1a7.png"/><img src = "https://user-images.githubusercontent.com/105181833/183505389-acc3f6a7-3391-46cf-9b4a-dbbac4e78c05.png"/><img src = "https://user-images.githubusercontent.com/105181833/183505504-f10eefb2-dede-465d-b32c-a08e732cf3b6.png"/></details><br/>
 <details><summary><b>친구</b></summary><br/> 
-  <img src = "https://user-images.githubusercontent.com/105181833/183505671-d0ccfc71-64c3-4c45-afb9-329922970999.png"/>  <img src = "https://user-images.githubusercontent.com/105181833/183505771-4123e8b8-7ebb-4ced-afc0-2854a5caacc4.png"/></details>
+  <img src = "https://user-images.githubusercontent.com/105181833/183505671-d0ccfc71-64c3-4c45-afb9-329922970999.png"/>  <img src = "https://user-images.githubusercontent.com/105181833/183505771-4123e8b8-7ebb-4ced-afc0-2854a5caacc4.png"/></details></br>
 
-## <b>JUST DO IT PREVIEW</b>
-##이슈 및 Trouble Shooting
+## <b>이슈 및 Trouble Shooting</b>
   <details><summary>게시물 filter</summary>
   문제 : 게시판에서 게시물을 filter할 때 query data로 넘겨주는 filter값이 바뀌지 않는 문제가 발생함.
     
