@@ -59,13 +59,32 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 
 <details>
 <summary><b>➡️ 주요 기능</b></summary> 
->캐릭터<br/>
-  ![image](https://user-images.githubusercontent.com/105181833/183503317-54c235dd-2380-47ce-9a97-1f9fb6331ec6.png)
+>메인<br/>
+  <img src = "https://user-images.githubusercontent.com/105181833/183503317-54c235dd-2380-47ce-9a97-1f9fb6331ec6.png"/>
+  <img src = "https://user-images.githubusercontent.com/105181833/183505897-6c62ea54-fd2f-4cd0-9567-ed0a4dcede83.png
+"/>
 
-> 계획 수립 <br/><br/>
-> 게시판<br/><br/>
->채팅 <br/><br/>
+> 계획 수립 
+  <img src = "https://user-images.githubusercontent.com/105181833/183503630-4f1f7507-480f-4eb0-9ac8-e7c6f6f7151c.png
+"/><img src = "https://user-images.githubusercontent.com/105181833/183503982-d6cc3e1f-b8ad-4dc1-8053-28e697ec9a72.png
+"/><img src = "https://user-images.githubusercontent.com/105181833/183504937-d19f9930-f401-4b02-9fa4-786ef4619cce.png
+"/><br/><br/>
+> 게시판
+  <img src = "https://user-images.githubusercontent.com/105181833/183504193-9f435176-b70b-436e-8b87-b9d8ea52ab24.png
+"/><img src = "https://user-images.githubusercontent.com/105181833/183504610-794ba83c-4fc5-47d4-83cb-8f06f1f7ef31.png
+"/><img src = "https://user-images.githubusercontent.com/105181833/183504808-89500443-502a-4e88-a758-91ba4156f8ec.png
+"/><img src = "https://user-images.githubusercontent.com/105181833/183505130-1d97fa4a-40d2-4eef-b741-ae1f9d68fbdb.png
+"/><br/><br/>
+>채팅 
+  <img src = "https://user-images.githubusercontent.com/105181833/183505269-eaaf3487-55a7-4a0f-88e3-38c9a3b8f1a7.png
+"/><img src = "https://user-images.githubusercontent.com/105181833/183505389-acc3f6a7-3391-46cf-9b4a-dbbac4e78c05.png
+"/><img src = "https://user-images.githubusercontent.com/105181833/183505504-f10eefb2-dede-465d-b32c-a08e732cf3b6.png
+"/><br/><br/>
+>친구
+  <img src = "https://user-images.githubusercontent.com/105181833/183505671-d0ccfc71-64c3-4c45-afb9-329922970999.png
+"/>  <img src = "https://user-images.githubusercontent.com/105181833/183505771-4123e8b8-7ebb-4ced-afc0-2854a5caacc4.png
 
+"/>
 
 <br/>
 </details>
