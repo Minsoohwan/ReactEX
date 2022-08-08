@@ -59,11 +59,13 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 
 <details>
 <summary><b>➡️ 주요 기능</b></summary> 
-  
+>캐릭터<br/>
+  ![image](https://user-images.githubusercontent.com/105181833/183503317-54c235dd-2380-47ce-9a97-1f9fb6331ec6.png)
+
 > 계획 수립 <br/><br/>
 > 게시판<br/><br/>
-  >채팅 <br/><br/>
->캐릭터<br/>
+>채팅 <br/><br/>
+
 
 <br/>
 </details>
