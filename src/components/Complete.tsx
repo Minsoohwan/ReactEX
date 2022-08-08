@@ -80,7 +80,9 @@ const Complete = (props: props) => {
         >
             {open && (
                 <CompleteOutLine
-                    onClick={(e: any) => {
+                    onClick={(
+                        e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+                    ) => {
                         e.stopPropagation();
                     }}
                 >

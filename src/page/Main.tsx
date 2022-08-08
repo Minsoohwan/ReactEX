@@ -1,4 +1,4 @@
-import React, { KeyboardEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import {
     BsFillCalendar2CheckFill,
@@ -248,8 +248,8 @@ export const Main = () => {
             },
         },
     );
-    const userData: any = useQuery('userData', callUpApi.getInfoApi, {
-        onSuccess: (res: any) => {
+    const userData = useQuery('userData', callUpApi.getInfoApi, {
+        onSuccess: (res) => {
             setUserdata(res.data);
             setProfileName(res.data.nick);
         },
@@ -319,9 +319,13 @@ export const Main = () => {
             },
         },
     );
-    const saveFileImage = (e: any) => {
-        updateImg(e.target.files[0]);
-        setFile(e.target.files[0]);
+    const saveFileImage = (e: ChangeEvent) => {
+        const event = e.target as HTMLInputElement;
+        const files: FileList | null = event.files;
+        if (files) {
+            updateImg(files[0]);
+            setFile(files[0]);
+        }
     };
 
     const deletePlanList = (id: number) => {
@@ -400,7 +404,7 @@ export const Main = () => {
                                 value={profileName}
                                 onChange={onChange}
                                 onKeyUp={onKeyPressNickname}
-                                onClick={(e: any) => {
+                                onClick={(e) => {
                                     e.stopPropagation();
                                 }}
                             />

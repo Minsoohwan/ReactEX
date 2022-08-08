@@ -99,7 +99,9 @@ const AddFriends = (props: props) => {
         >
             {open && (
                 <ModalOutLine
-                    onClick={(e: any) => {
+                    onClick={(
+                        e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+                    ) => {
                         e.stopPropagation();
                     }}
                 >

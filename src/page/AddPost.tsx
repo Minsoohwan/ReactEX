@@ -199,10 +199,10 @@ export const AddPost = () => {
     });
     const [userdata, setUserdata] = useRecoilState(userInfo);
     const [shareDataSet, setShareDataSet] = useRecoilState(shareData);
-    const inputImg: any = useRef();
+    const inputImg = useRef<HTMLInputElement>(null);
     const nav = useNavigate();
-    const userData: any = useQuery('userData', callUpApi.getInfoApi, {
-        onSuccess: (res: any) => {
+    const userData = useQuery('userData', callUpApi.getInfoApi, {
+        onSuccess: (res) => {
             setUserdata(res.data);
         },
     });
@@ -216,9 +216,13 @@ export const AddPost = () => {
     const onChangeContent = (e: ChangeEvent<HTMLTextAreaElement>) => {
         setText({ ...text, content: e.target.value });
     };
-    const view = (e: any) => {
-        saveImgFunc(e.target.files[0]);
-        setViewImg(URL.createObjectURL(e.target.files[0]));
+    const view = (e: ChangeEvent) => {
+        const event = e.target as HTMLInputElement;
+        const files: FileList | null = event.files;
+        if (files) {
+            saveImgFunc(files[0]);
+            setViewImg(URL.createObjectURL(files[0]));
+        }
     };
     const deleteFileImage = () => {
         URL.revokeObjectURL(viewImg);
@@ -325,7 +329,9 @@ export const AddPost = () => {
                                 display={display ? 'flex' : 'none'}
                                 onClick={() => {
                                     deleteFileImage();
-                                    inputImg.current.value = '';
+                                    if (inputImg.current) {
+                                        inputImg.current.value = '';
+                                    }
                                 }}
                             >
                                 <BsFillTrashFill size={15} />

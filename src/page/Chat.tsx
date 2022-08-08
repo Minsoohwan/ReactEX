@@ -148,20 +148,20 @@ export const Chat = () => {
     const queryClient = useQueryClient();
 
     const nav = useNavigate();
-    const userData: any = useQuery('userData', callUpApi.getInfoApi, {
-        onSuccess: (res: any) => {
+    const userData = useQuery('userData', callUpApi.getInfoApi, {
+        onSuccess: (res) => {
             queryClient.invalidateQueries('chatList');
             setUserdata(res.data);
         },
         onError: (res) => {},
     });
-    const chatQuery: any = useQuery('chatList', callUpApi.getChatListApi, {
-        onSuccess: (res: any) => {
+    const chatQuery = useQuery('chatList', callUpApi.getChatListApi, {
+        onSuccess: (res) => {
             setChatList(res.data);
         },
     });
-    const friendQuery: any = useQuery('friendList', callUpApi.friendsListApi, {
-        onSuccess: (res: any) => {
+    const friendQuery = useQuery('friendList', callUpApi.friendsListApi, {
+        onSuccess: (res) => {
             setFriends(res.data);
         },
     });

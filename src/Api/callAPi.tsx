@@ -62,7 +62,7 @@ export interface plan {
 }
 export interface editPlan {
     data: plan;
-    id: any;
+    id: number | undefined;
 }
 const getInfoApi = async () => {
     const gia = await callApi.get('/user');

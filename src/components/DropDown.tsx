@@ -56,8 +56,8 @@ const Dropdown = () => {
         scopePlan.mutate(data);
     };
 
-    const userData: any = useQuery('userData', callUpApi.getInfoApi, {
-        onSuccess: (res: any) => {
+    const userData = useQuery('userData', callUpApi.getInfoApi, {
+        onSuccess: (res) => {
             setUserData(res.data);
         },
     });

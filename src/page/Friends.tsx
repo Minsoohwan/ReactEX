@@ -112,17 +112,17 @@ export const Friends = () => {
     }
     const queryClient = useQueryClient();
 
-    const friendQuery: any = useQuery('friendList', callUpApi.friendsListApi, {
-        onSuccess: (res: any) => {
+    const friendQuery = useQuery('friendList', callUpApi.friendsListApi, {
+        onSuccess: (res) => {
             setFriends(res.data);
         },
     });
 
-    const requestFriendQuery: any = useQuery(
+    const requestFriendQuery = useQuery(
         'requestFriendList',
         callUpApi.requestFriendListsApi,
         {
-            onSuccess: (res: any) => setrequestFriendsList(res.data),
+            onSuccess: (res) => setrequestFriendsList(res.data),
         },
     );
 

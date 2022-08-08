@@ -148,7 +148,7 @@ export const Todo = () => {
     const deletePlan = useMutation(
         (id: number) => callUpApi.deletePlanApi(id),
         {
-            onSuccess: (res: any) => {
+            onSuccess: () => {
                 queryClient.invalidateQueries('planData');
             },
             onError: (err: AxiosError<{ msg: string }>) => {

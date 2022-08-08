@@ -52,7 +52,9 @@ const UserModal = () => {
         >
             {showUserModal && (
                 <MenuOutLine
-                    onClick={(e: any) => {
+                    onClick={(
+                        e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+                    ) => {
                         e.stopPropagation();
                     }}
                 >

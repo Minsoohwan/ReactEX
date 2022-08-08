@@ -3,9 +3,14 @@ import styled, { keyframes } from 'styled-components';
 import { MdEmojiPeople } from 'react-icons/md';
 import { BsThreeDots, BsPencilFill, BsTrashFill } from 'react-icons/bs';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import setupInterceptorsTo from '../Api/Interceptors';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import {
+    useMutation,
+    useQuery,
+    useQueryClient,
+    UseQueryResult,
+} from 'react-query';
 import { ContentProfileImg, createDateTime, DateDiv } from './Community';
 import { callUpApi } from '../Api/callAPi';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
@@ -186,16 +191,18 @@ export const CommunityDetail = () => {
     const queryClient = useQueryClient();
     const nav = useNavigate();
 
-    const chatQuery: any = useQuery('chatList', callUpApi.getChatListApi, {});
+    const chatQuery = useQuery('chatList', callUpApi.getChatListApi, {});
     function checkChatRoom(data: string) {
-        const roomId = [];
-        for (let i = 0; i < chatQuery.data.data.length; i++) {
-            roomId.push(chatQuery.data.data[i].roomId);
-        }
-        if (roomId.includes(data)) {
-            return false;
-        } else {
-            return true;
+        if (chatQuery.status === 'success') {
+            const roomId = [];
+            for (let i = 0; i < chatQuery.data.data.length; i++) {
+                roomId.push(chatQuery.data.data[i].roomId);
+            }
+            if (roomId.includes(data)) {
+                return false;
+            } else {
+                return true;
+            }
         }
     }
     const baseApi = axios.create({

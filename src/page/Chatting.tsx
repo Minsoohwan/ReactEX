@@ -149,12 +149,11 @@ export const Chatting = () => {
         setmsg(e.target.value);
     };
 
-    const userData: any = useQuery('userData', callUpApi.getInfoApi, {
-        onSuccess: (res: any) => {
+    const userData = useQuery('userData', callUpApi.getInfoApi, {
+        onSuccess: (res) => {
             setUserdata(res.data);
         },
     });
-    const queryClient = useQueryClient();
     const params = useParams();
     const roomId = params.id;
     const sock = new SockJS('https://todowith.shop/ws');
@@ -164,12 +163,13 @@ export const Chatting = () => {
         const gcda = await callApi.get(`/chat/message/before?roomId=${roomId}`);
         return gcda;
     };
-    const userChatList: any = useQuery('chattingList', getChatApi, {
-        onSuccess: (res: any) => {
-            console.log(res);
+    const userChatList = useQuery('chattingList', getChatApi, {
+        onSuccess: (res) => {
+            queryClient.invalidateQueries('chattingList');
             setChattingList(res.data.content);
         },
     });
+    const queryClient = useQueryClient();
     const localToken = localStorage.getItem('recoil-persist');
     function wsConnectSubscribe() {
         try {
@@ -190,7 +190,10 @@ export const Chatting = () => {
                                         'chattingList',
                                     );
                                 },
-                                { Authorization: access, id: roomId },
+                                {
+                                    Authorization: access,
+                                    id: roomId,
+                                },
                             );
                         },
                     );
@@ -259,12 +262,13 @@ export const Chatting = () => {
     const onKeyPressEmailCert = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             sendMessage();
+            queryClient.invalidateQueries('chattingList');
             setmsg('');
         }
     };
     useEffect(() => {
         wsConnectSubscribe();
-    }, []);
+    }, [localToken]);
     function sendMessage() {
         try {
             // token이 없으면 로그인 페이지로 이동
@@ -307,6 +311,7 @@ export const Chatting = () => {
             nav('/login?로그인+정보가+없습니다.');
         }
     }, [localToken]);
+
     return (
         <CommonLayout title="Chatting">
             <ImExit
@@ -320,7 +325,7 @@ export const Chatting = () => {
             />
             <Content>
                 {chattinglist.map((chat: chatList, i: number) => {
-                    if (chat.sender === '[알림]') {
+                    if (chat.type === 'QUIT') {
                         return (
                             <ChatDiv key={i} position="center">
                                 <ChatConent
@@ -470,6 +475,7 @@ export const Chatting = () => {
                 <SendButton
                     onClick={() => {
                         sendMessage();
+
                         setmsg('');
                     }}
                 >
