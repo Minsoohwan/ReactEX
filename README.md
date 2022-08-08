@@ -28,7 +28,15 @@ JavsScript 기반 언어로 목적에 맞지 않는 타입 사용을 최소화 �
 ### `React`
 
 JUST DO IT의 개발 Tool은 React입니다. React는 메타에서 개발한 open source library로  Dirty checking과 Virtual DOM을 활용하여 update가 필요한 DOM요소를 찾아 업데이트하기 떄문에 re-rendering이 잦은 웹에서 효율적인 동작을 합니다. 또한 React-Hooks 메소드는 보다 편리한 개발 환경을 만들어줍니다.
+  
+### `React Query`
 
+서버 상태관리 library로 기존 store의 data와 서버의 data가 달라 발생하는 오류를 없애고 오래된 정보를 다시 캐싱하여 빠른 데이터 반영을 위하여 사용했습니다.  
+
+### `Recoil`
+  
+Context API 기반 전역 상태관리 library로 사용법이 간단합니다. 로그인 시 Token 저장과 Modal의 state를 부모 컴포넌트로 이동, React Query로 받아온 data를 전역으로 사용하기 위하여 사용했습니다.
+  
 ### `Axios`
 
 Promise 기반 client로 주로 API통신을 위하여 사용했습니다.
