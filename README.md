@@ -14,7 +14,6 @@
 <br>
   <img src="https://img.shields.io/badge/Axios-39477F?style=for-the-badge&logo=Axios&logoColor=white">
  <img src="https://img.shields.io/badge/Stomp & Sock.Js-0ABF53?style=for-the-badge&logo=Stomp & Sock.Js&logoColor=white">
-<img src="https://img.shields.io/badge/SSE-FFB71B?style=for-the-badge&logo=SSE&logoColor=ffffff">
  <br> <br/>
    <img src="https://img.shields.io/badge/GitHub%20Actions-232F3E?style=for-the-badge&logo=GitHubActions&logoColor=2088FF"/>
   <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white">
@@ -22,48 +21,134 @@
  <img src="https://img.shields.io/badge/Amazon AWS-232F3E?style=for-the-badge&logo=Amazon AWS&logoColor=white">
  <img src="https://img.shields.io/badge/Amazon S3-569A31?style=for-the-badge&logo=Amazon S3&logoColor=white">
 
-### `yarn start`
+### `TypeScript`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+JavsScript 기반 언어로 목적에 맞지 않는 타입 사용을 최소화 하여 코드 작성 단계에서 오류를 확인할 수 있고 버그의 사전 예방에 유용하기 때문에 기반 언어로 채택했습니다.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### `React`
 
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-<details>
-<summary><b>➡️ 브라우저 호환성</b></summary> 
+JUST DO IT의 개발 Tool은 React입니다. React는 메타에서 개발한 open source library로  Dirty checking과 Virtual DOM을 활용하여 update가 필요한 DOM요소를 찾아 업데이트하기 떄문에 re-rendering이 잦은 웹에서 효율적인 동작을 합니다. 또한 React-Hooks 메소드는 보다 편리한 개발 환경을 만들어줍니다.
   
-> **문제** : 타 브라우저는 정상 작동하나 네이버 앱과 삼성 기본 브라우저에서 메인페이지의 경험치 바가 마운트되지 않음. <br/><br/>
-> **원인** : 차트 JS의 그라데이션 캔버스 함수가 원인이었음. <br/><br/>
-  > **접근** : 안드로이드에서 로컬 환경테스트를 함. navigator.userAgent 로 브라우저 종류 구별정보를 파악함. <br/><br/>
-> **결론** : 문제 브라우저에서 경험치바가 그라데이션이 없는 1가지 색으로 보이게 할 계획이었으나, 디자이너님의 요청으로 타 브라우저 사용 유도함.<br/>
-[자세히보러가기](https://github.com/HanghaeE5/Front-end/wiki/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%95%A4%EB%93%9C-%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85---%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%ED%98%B8%ED%99%98)
+### `React Query`
+
+서버 상태관리 library로 기존 store의 data와 서버의 data가 달라 발생하는 오류를 없애고 오래된 정보를 다시 캐싱하여 빠른 데이터 반영을 위하여 사용했습니다.  
+
+### `Recoil`
+  
+Context API 기반 전역 상태관리 library로 사용법이 간단합니다. 로그인 시 Token 저장과 Modal의 state를 부모 컴포넌트로 이동, React Query로 받아온 data를 전역으로 사용하기 위하여 사용했습니다.
+  
+### `Axios`
+
+Promise 기반 client로 주로 API통신을 위하여 사용했습니다.
+
+### `StompJs & SockJs`
+
+실시간 채팅을 위하여 사용했습니다.
+
+## <b>JUST DO IT PREVIEW</b>
+<details> <summary><b>메인</b></summary><br/>
+  
+  <img src = "https://user-images.githubusercontent.com/105181833/183503317-54c235dd-2380-47ce-9a97-1f9fb6331ec6.png"/>
+  <img src = "https://user-images.githubusercontent.com/105181833/183505897-6c62ea54-fd2f-4cd0-9567-ed0a4dcede83.png"/>
+  </details>
 <br/>
-</details>
+<details>  <summary><b>계획 수립</b></summary><br/> 
+  <img src = "https://user-images.githubusercontent.com/105181833/183503630-4f1f7507-480f-4eb0-9ac8-e7c6f6f7151c.png"/><img src = "https://user-images.githubusercontent.com/105181833/183503982-d6cc3e1f-b8ad-4dc1-8053-28e697ec9a72.png"/><img src = "https://user-images.githubusercontent.com/105181833/183504937-d19f9930-f401-4b02-9fa4-786ef4619cce.png"/><details><br/>
+</details><summary><b>게시판</b></summary><br/> 
+  <img src = "https://user-images.githubusercontent.com/105181833/183504193-9f435176-b70b-436e-8b87-b9d8ea52ab24.png"/><img src = "https://user-images.githubusercontent.com/105181833/183504610-794ba83c-4fc5-47d4-83cb-8f06f1f7ef31.png"/><img src = "https://user-images.githubusercontent.com/105181833/183504808-89500443-502a-4e88-a758-91ba4156f8ec.png"/><img src = "https://user-images.githubusercontent.com/105181833/183505130-1d97fa4a-40d2-4eef-b741-ae1f9d68fbdb.png"/></details><br/>
+<details><summary><b>채팅</b></summary><br/>  
+  <img src = "https://user-images.githubusercontent.com/105181833/183505269-eaaf3487-55a7-4a0f-88e3-38c9a3b8f1a7.png"/><img src = "https://user-images.githubusercontent.com/105181833/183505389-acc3f6a7-3391-46cf-9b4a-dbbac4e78c05.png"/><img src = "https://user-images.githubusercontent.com/105181833/183505504-f10eefb2-dede-465d-b32c-a08e732cf3b6.png"/></details><br/>
+<details><summary><b>친구</b></summary><br/> 
+  <img src = "https://user-images.githubusercontent.com/105181833/183505671-d0ccfc71-64c3-4c45-afb9-329922970999.png"/>  <img src = "https://user-images.githubusercontent.com/105181833/183505771-4123e8b8-7ebb-4ced-afc0-2854a5caacc4.png"/></details></br>
+
+## <b>이슈 및 Trouble Shooting</b>
+
+  <details><summary>게시물 filter</summary>
+  문제 : 게시판에서 게시물을 filter할 때 query data로 넘겨주는 filter값이 바뀌지 않는 문제가 발생함.
+    
+    const getBoard = async ({ pageParam = 0 }) => {
+        const res = await callApi.get(
+            `/board?size=10&page=${pageParam}&filter=${select}&sub=${search}&keyword=${searchValue.value}`,
+        );
+
+        return {
+            boardListData: res.data.content,
+            page: pageParam,
+            isLast: res.data.totalPages,
+        };
+    };
+    
+  접근 : 기존의 queryClient.invalidateQueries()는 data만 다시 캐싱하기 때문에 api통신을 다시 하지 않는다고 생각함.
+  
+  해결방법1 : queryClient.invalidateQueries()를 지우고 refetchInterval을 useInfiniteQuery의 onSuccess 콜백 함수에 추가해 주기적으로 refetch하게 함.
+    
+     const { data, fetchNextPage, isSuccess, hasNextPage} =
+        useInfiniteQuery(
+            'boardData',
+
+            getBoard,
+
+            {
+                getNextPageParam: (lastPage) => {
+                    if (lastPage.page + 1 !== lastPage.isLast)
+                        return lastPage.page + 1;
+                    return undefined;
+                },
+                refetchInterval: 1000,
+            },
+        );
+    
+  문제점 : 불피요한 통신과 refetch가 많아저 성능 저하가 예상됨.
+  
+  해결방법2 : select state값이 바뀔 때 useEffect를 통해 refetch하게 함.
+    
+    useEffect(() => {
+        refetch();
+    }, [select]);
+    
+   결과적으로 원하는 filter를 선택했을 때 refetch가 한 번만 일어나게 수정됨.
+  </details>
+ <details><summary>Library CSS</summary>
+  
+  문제 : react-datepicker library를 원하는대로 수정할 수가 없어 원하는 디자인이 나오지 않게됨.
+  
+  접근 : react-datepicker에 해당하는 node_modules경로로 들어가 직접 css를 수정하면 될 것이라고 생각.
+  
+  시도 : node_modules경로에서 직접 css를 수정해 봤지만 반영이 되지 않음.
+  
+  해결방법 : 개발자도구에서 요소 선택으로 해당 요소를 선택한 뒤 class를 찾고 css파일을 만들어 !important로 내가 지정한 style로 덮어씌움. 
+  <img src = "https://user-images.githubusercontent.com/105181833/183516218-a0b0457c-6712-4849-be38-6ea6413847fd.png"/></br>
+  <img src = "https://user-images.githubusercontent.com/105181833/183516491-065bff95-4591-4e73-9126-14c1949530e7.png"/>
+  
+</details>  
+ <details><summary>비효율적인 코딩</summary>
+  
+  문제 : 로그인, 회원가입, 메인, 친구의 메인 4개의 페이지를 제외한 모든 페이지에서 공통된 component들을 페이지마다 각각 사용하고 있어 비효율적인 코딩을 하게됨.
+
+  해결 : CommonLayout component를 만들어 공통된 component를 이용해 layout을 만들고 props의 children 속성을 사용해 페이지를 layout 사이에 위치시켜 해결.
+  
+    const CommonLayout = ({children, titl}: {children: any;title: string;}) => {
+      const [showReq, setShowReq] = useState<boolean>(false);
+
+      function closeReq() {
+          setShowReq(!showReq);
+      }
+      return (
+          <WhiteBoard>
+              <TopBar />
+              <Title title={title} />
+              <TopBack />
+              <UserModal />
+              {children}
+              <AddListModal
+                  title="일정 추가하기"
+                  open={showReq}
+                  close={closeReq}
+                  type="add"
+              />
+              <AppBack />
+              <AppBar close={closeReq} />
+          </WhiteBoard>
+      );
+  };
+  </details>
