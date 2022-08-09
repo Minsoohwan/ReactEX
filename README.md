@@ -41,7 +41,7 @@ Context API 기반 전역 상태관리 library로 사용법이 간단합니다. 
 
 Promise 기반 client로 주로 API통신을 위하여 사용했습니다.
 
-### `Stomp & Sock.Js`
+### `StompJs & SockJs`
 
 실시간 채팅을 위하여 사용했습니다.
 
