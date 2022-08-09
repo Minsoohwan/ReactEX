@@ -143,6 +143,7 @@ const AddListModal = (props: props) => {
     const [content, setContent] = useState<any>('');
     const [categori, setCategori] = useState<string>('');
     const [date, setDate] = useRecoilState<string[]>(dateState);
+    console.log(date);
     const setShareDataSet = useSetRecoilState(shareData);
     function closeReq() {
         setShowReq(!showReq);
