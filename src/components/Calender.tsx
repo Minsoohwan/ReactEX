@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import ko from 'date-fns/locale/ko';
 import { useRecoilState } from 'recoil';
 import { calenderState, dateState } from '../recoil/store';
+import moment from 'moment';
 
 registerLocale('ko', ko);
 
