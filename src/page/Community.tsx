@@ -388,7 +388,7 @@ export const Community = () => {
             <ContentOutLine>
                 {isSuccess && data.pages
                     ? data.pages.map((value, pages) => {
-                          const listPage = value.boardListData;
+                          const listPage: any = value.boardListData;
                           return listPage.map((v: any, i: number) => {
                               if (
                                   data.pages.length - 1 === pages &&
