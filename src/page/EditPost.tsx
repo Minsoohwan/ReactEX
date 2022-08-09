@@ -234,7 +234,7 @@ export const EditPost = () => {
     };
 
     const saveImgFunc = (data: File) => {
-        let formData = new FormData();
+        const formData = new FormData();
 
         formData.append('file', data);
 

@@ -216,9 +216,9 @@ const Count = styled.div`
     font-weight: bold;
 `;
 export const createDateTime = (date: string) => {
-    let dateNTime = date.split('T');
-    let oldDate = dateNTime[0].split('-');
-    let oldTime = dateNTime[1].split(':');
+    const dateNTime = date.split('T');
+    const oldDate = dateNTime[0].split('-');
+    const oldTime = dateNTime[1].split(':');
     const newDate = oldDate[0] + '.' + oldDate[1] + '.' + oldDate[2];
     if (oldTime[0] === '00') {
         const newTime = '오전 12시' + oldTime[1] + '분';

@@ -66,15 +66,16 @@ const Calender = () => {
         if (published_at === null) {
             return '';
         } else {
-            var moment = require('moment');
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            const moment = require('moment');
 
             const publish_date = moment(published_at).format('YYYY-MM-DD');
             return publish_date;
         }
     }
     function getDatesStartToLast(startDate: string, endDate: string) {
-        var result = [];
-        var curDate = new Date(startDate);
+        const result = [];
+        const curDate = new Date(startDate);
         while (curDate <= new Date(endDate)) {
             result.push(curDate.toISOString().split('T')[0]);
             curDate.setDate(curDate.getDate() + 1);

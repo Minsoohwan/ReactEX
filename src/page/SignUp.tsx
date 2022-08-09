@@ -88,16 +88,16 @@ const EyeDiv = styled.div`
 export const SignUP = () => {
     const nav = useNavigate();
     const CheckEmail = (asValue: string) => {
-        var regExp =
+        const regExp =
             /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
         return regExp.test(asValue);
     };
     const CheckNickname = (asValue: string) => {
-        var regExp = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]{2,15}$/;
+        const regExp = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]{2,15}$/;
         return regExp.test(asValue);
     };
     const CheckPassword = (asValue: string) => {
-        var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{5,10}$/;
+        const regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{5,10}$/;
         return regExp.test(asValue);
     };
     const [emailtext, setEmailText] = useState<string>('');

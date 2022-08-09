@@ -222,7 +222,7 @@ export const Main = () => {
         setShowComplete(!showComplete);
     }
     const CheckNickname = (asValue: string) => {
-        var regExp = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]{2,15}$/;
+        const regExp = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]{2,15}$/;
         return regExp.test(asValue);
     };
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -297,7 +297,7 @@ export const Main = () => {
     };
 
     const updateImg = (file: File | undefined) => {
-        let formData = new FormData();
+        const formData = new FormData();
         if (file) {
             formData.append('file', file);
         }

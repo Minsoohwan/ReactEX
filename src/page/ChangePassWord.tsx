@@ -81,7 +81,7 @@ export const ChangePassWord = () => {
     const [viewCheck, setViewCheck] = useState<boolean>(true);
 
     const CheckPassword = (asValue: string) => {
-        var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{5,10}$/;
+        const regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{5,10}$/;
         return regExp.test(asValue);
     };
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {

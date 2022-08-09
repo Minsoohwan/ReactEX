@@ -153,7 +153,6 @@ export const Chat = () => {
             queryClient.invalidateQueries('chatList');
             setUserdata(res.data);
         },
-        onError: (res) => {},
     });
     const chatQuery = useQuery('chatList', callUpApi.getChatListApi, {
         onSuccess: (res) => {
