@@ -25,5 +25,5 @@ module.exports = {
         ecmaVersion: 'latest',
         sourceType: 'module',
     },
-    plugins: ['react', '@typescript-eslint', 'simple-import-sort'],
+    plugins: ['react', '@typescript-eslint'],
 };
