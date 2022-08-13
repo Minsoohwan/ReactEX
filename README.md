@@ -108,6 +108,86 @@ Promise 기반 client로 주로 API통신을 위하여 사용했습니다.
     
    결과적으로 원하는 filter를 선택했을 때 refetch가 한 번만 일어나게 수정됨.
   </details>
+  
+  <details><summary>로그인 오류</summary>
+  문제 : 로그인 후 메인 페이지 이동 시 로그인 정보가 없다는 alert 출력 후 로그인 페이지로 돌아감. 로그인 페이지로 돌아오면 이미 로그인 돼있다는 alert가 다시 출력되고 메인페이지로 다시 이동됨.
+    
+    로그인 page
+    
+    const loginApi = async (data: login) => {
+      const la = await callApi.post('/login', data);
+      return la;
+    };
+    
+    const loginToken = useSetRecoilState(accessTokenState);
+
+    const loginFunc = () => {
+        login.mutate(loginData);
+    };
+    const login = useMutation((data: login) => callUpApi.loginApi(data), {
+        onSuccess: (res) => {
+            loginToken(res.headers.authorization);
+            alert(res.data);
+            nav('/');
+        },
+        onError: (err: AxiosError) => {
+            alert('아이디/비밀번호를 확인해 주세요!');
+        },
+    });
+    
+    메인 page
+    
+    const localToken = localStorage.getItem('recoil-persist');
+    
+     useEffect(() => {
+        if (!localToken) {
+            alert('로그인 정보가 없습니다.');
+            nav('/login?로그인+정보가+없습니다.');
+        }
+    }, [localToken]);
+    
+  접근 : React-Query의 OnSuccess callback 함수가 비동기로 처리되어 Token이 localStorage에 저장되는 것과 alert, page 이동이 같이 이루어 지기 때문에 메인 page에서 토큰이 없다고 판단된다고 생각.
+  
+  해결방법1 : 로그인 page의 muation 함수에서 alert와 nav를 setTImeout으로 0.1초 뒤에 실행하게함.
+  
+  const login = useMutation((data: login) => callUpApi.loginApi(data), {
+        onSuccess: (res) => {
+            loginToken(res.headers.authorization);
+            setTimeout(()=>{
+              alert(res.data);
+              nav('/');
+            },100)
+        },
+        onError: (err: AxiosError) => {
+            alert('아이디/비밀번호를 확인해 주세요!');
+        },
+    });
+    
+  해결방법2 : API 통신을 할 때 Token 저장과 alert를 출력하고, mutation 함수가 성공했을 때 메인 page로 이동하게 함. 위 기술한 해결방법은 mutation함수가 성공하고 0.1초의 시간이 지연되지만 이 해결법은 시간의 지연 없이 바로 동작하기 때문에 더 효율적이라고 생각함.
+  
+  const loginApi = async (data: login) => {
+    const la = await callApi.post('/login', data).then((res) => {
+        localStorage.setItem(
+            'recoil-persist',
+            JSON.stringify({
+                access: res.headers.authorization,
+            }),
+        );
+        alert(res.data);
+    });
+    return la;
+  };
+  const login = useMutation((data: login) => callUpApi.loginApi(data), {
+        onSuccess: () => {
+            nav('/');
+        },
+        onError: (err: AxiosError) => {
+            alert('아이디/비밀번호를 확인해 주세요!');
+        },
+  });
+  
+  </details>
+  
  <details><summary>Library CSS</summary>
   
   문제 : react-datepicker library를 원하는대로 수정할 수가 없어 원하는 디자인이 나오지 않게됨.
