@@ -300,7 +300,8 @@ export const Friends = () => {
                                         hoverColor="black"
                                         backColor="#e44a4a"
                                         hoverBackColor="white"
-                                        onClick={() => {
+                                        onClick={(e) => {
+                                            e.stopPropagation();
                                             deleteFriendsList({
                                                 nick: list.nick,
                                             });
