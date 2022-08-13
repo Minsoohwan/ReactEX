@@ -150,41 +150,41 @@ Promise 기반 client로 주로 API통신을 위하여 사용했습니다.
   
   해결방법1 : 로그인 page의 muation 함수에서 alert와 nav를 setTImeout으로 0.1초 뒤에 실행하게함.
   
-  const login = useMutation((data: login) => callUpApi.loginApi(data), {
-        onSuccess: (res) => {
-            loginToken(res.headers.authorization);
-            setTimeout(()=>{
-              alert(res.data);
-              nav('/');
-            },100)
-        },
-        onError: (err: AxiosError) => {
-            alert('아이디/비밀번호를 확인해 주세요!');
-        },
+    const login = useMutation((data: login) => callUpApi.loginApi(data), {
+          onSuccess: (res) => {
+              loginToken(res.headers.authorization);
+              setTimeout(()=>{
+                alert(res.data);
+                nav('/');
+              },100)
+          },
+          onError: (err: AxiosError) => {
+              alert('아이디/비밀번호를 확인해 주세요!');
+          },
     });
     
   해결방법2 : API 통신을 할 때 Token 저장과 alert를 출력하고, mutation 함수가 성공했을 때 메인 page로 이동하게 함. 위 기술한 해결방법은 mutation함수가 성공하고 0.1초의 시간이 지연되지만 이 해결법은 시간의 지연 없이 바로 동작하기 때문에 더 효율적이라고 생각함.
   
-  const loginApi = async (data: login) => {
-    const la = await callApi.post('/login', data).then((res) => {
-        localStorage.setItem(
-            'recoil-persist',
-            JSON.stringify({
-                access: res.headers.authorization,
-            }),
-        );
-        alert(res.data);
+    const loginApi = async (data: login) => {
+      const la = await callApi.post('/login', data).then((res) => {
+          localStorage.setItem(
+              'recoil-persist',
+              JSON.stringify({
+                  access: res.headers.authorization,
+              }),
+          );
+          alert(res.data);
+      });
+      return la;
+    };
+    const login = useMutation((data: login) => callUpApi.loginApi(data), {
+          onSuccess: () => {
+              nav('/');
+          },
+          onError: (err: AxiosError) => {
+              alert('아이디/비밀번호를 확인해 주세요!');
+          },
     });
-    return la;
-  };
-  const login = useMutation((data: login) => callUpApi.loginApi(data), {
-        onSuccess: () => {
-            nav('/');
-        },
-        onError: (err: AxiosError) => {
-            alert('아이디/비밀번호를 확인해 주세요!');
-        },
-  });
   
   </details>
   
@@ -201,9 +201,9 @@ Promise 기반 client로 주로 API통신을 위하여 사용했습니다.
   <img src = "https://user-images.githubusercontent.com/105181833/183516491-065bff95-4591-4e73-9126-14c1949530e7.png"/>
   
 </details>  
- <details><summary>비효율적인 코딩</summary>
+ <details><summary>비효율적인 Component</summary>
   
-  문제 : 로그인, 회원가입, 메인, 친구의 메인 4개의 페이지를 제외한 모든 페이지에서 공통된 component들을 페이지마다 각각 사용하고 있어 비효율적인 코딩을 하게됨.
+  문제 : 로그인, 회원가입, 메인, 친구의 메인 4개의 페이지를 제외한 모든 페이지에서 공통된 component들을 페이지마다 각각 사용하고 있어 비효율적이라고 .
 
   해결 : CommonLayout component를 만들어 공통된 component를 이용해 layout을 만들고 props의 children 속성을 사용해 페이지를 layout 사이에 위치시켜 해결.
   
