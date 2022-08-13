@@ -197,6 +197,7 @@ Promise 기반 client로 주로 API통신을 위하여 사용했습니다.
   시도 : node_modules경로에서 직접 css를 수정해 봤지만 반영이 되지 않음.
   
   해결방법 : 개발자도구에서 요소 선택으로 해당 요소를 선택한 뒤 class를 찾고 css파일을 만들어 !important로 내가 지정한 style로 덮어씌움. 
+  
   <img src = "https://user-images.githubusercontent.com/105181833/183516218-a0b0457c-6712-4849-be38-6ea6413847fd.png"/></br>
   <img src = "https://user-images.githubusercontent.com/105181833/183516491-065bff95-4591-4e73-9126-14c1949530e7.png"/>
   
