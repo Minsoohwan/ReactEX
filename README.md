@@ -188,6 +188,14 @@ Promise 기반 client로 주로 API통신을 위하여 사용했습니다.
   
   </details>
   
+  <details><summary>Event Bubbling</summary>
+  
+  문제 : 친구 목록 page에서 친구 삭제를 누르면 부모 component의 친구의 메인 page로가는 event가 같이 실행되는 Event Bubbling이 발생함.
+  
+  해결방법 : 친구 삭제 버튼에 e.stopPropagation()을 추가해  Event Bubbling을 막음.
+  
+</details>  
+  
  <details><summary>Library CSS</summary>
   
   문제 : react-datepicker library를 원하는대로 수정할 수가 없어 원하는 디자인이 나오지 않게됨.
