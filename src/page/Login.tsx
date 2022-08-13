@@ -107,18 +107,12 @@ export const Login = () => {
         email: emailtext,
         password: password,
     };
-    const loginToken = useSetRecoilState(accessTokenState);
-
     const loginFunc = () => {
         login.mutate(loginData);
     };
     const login = useMutation((data: login) => callUpApi.loginApi(data), {
-        onSuccess: (res) => {
-            loginToken(res.headers.authorization);
-            setTimeout(() => {
-                alert(res.data);
-                nav('/');
-            }, 100);
+        onSuccess: () => {
+            nav('/');
         },
         onError: (err: AxiosError) => {
             alert('아이디/비밀번호를 확인해 주세요!');

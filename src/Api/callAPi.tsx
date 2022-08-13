@@ -89,7 +89,15 @@ const nicknameCheckApi = async (nick: {}) => {
     return nca;
 };
 const loginApi = async (data: login) => {
-    const la = await callApi.post('/login', data);
+    const la = await callApi.post('/login', data).then((res) => {
+        localStorage.setItem(
+            'recoil-persist',
+            JSON.stringify({
+                access: res.headers.authorization,
+            }),
+        );
+        alert(res.data);
+    });
     return la;
 };
 
