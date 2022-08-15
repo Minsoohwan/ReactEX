@@ -188,6 +188,14 @@ Promise 기반 client로 주로 API통신을 위하여 사용했습니다.
   
   </details>
   
+  <details><summary>Event Bubbling</summary>
+  
+  문제 : 친구 목록 page에서 친구 삭제를 누르면 부모 component의 친구의 메인 page로가는 event가 같이 실행되는 Event Bubbling이 발생함.
+  
+  해결방법 : 친구 삭제 버튼에 e.stopPropagation()을 추가해  Event Bubbling을 막음.
+  
+</details>  
+  
  <details><summary>Library CSS</summary>
   
   문제 : react-datepicker library를 원하는대로 수정할 수가 없어 원하는 디자인이 나오지 않게됨.
@@ -204,7 +212,7 @@ Promise 기반 client로 주로 API통신을 위하여 사용했습니다.
 </details>  
  <details><summary>비효율적인 Component</summary>
   
-  문제 : 로그인, 회원가입, 메인, 친구의 메인 4개의 페이지를 제외한 모든 페이지에서 공통된 component들을 페이지마다 각각 사용하고 있어 비효율적이라고 .
+  문제 : 로그인, 회원가입, 메인, 친구의 메인 4개의 페이지를 제외한 모든 페이지에서 공통된 component들을 페이지마다 각각 사용하고 있어 비효율적이라고 생각.
 
   해결 : CommonLayout component를 만들어 공통된 component를 이용해 layout을 만들고 props의 children 속성을 사용해 페이지를 layout 사이에 위치시켜 해결.
   
