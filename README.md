@@ -43,7 +43,8 @@ Promise 기반 client로 주로 API통신을 위하여 사용했습니다.
 
 ### `StompJs & SockJs`
 
-실시간 채팅을 위하여 사용했습니다.
+-WebSocket은 http에서 지원하지 않는 양방향 실시간 스트리밍을 가능하게합니다. SockJS는 모든 최신 브라우저와 WebSocket 프로토콜을 지원하지 않는 환경에서 작동하기때문에 사용하였습니다.
+ -Stomp.js는 Javascript환경에서 Stomp를 사용하게 해줍니다. stomp는 simple text oriented messaging                      protocol의 약자로 메시지의 형식, 유형, 내용 등을 정의해줍니다. Text, Binary 메시지 type만 정의하는                         WebSocket에 비해 사용하기가 간단해 사용했습니다.
 
 ## <b>JUST DO IT PREVIEW</b>
 <details> <summary><b>메인</b></summary><br/>
